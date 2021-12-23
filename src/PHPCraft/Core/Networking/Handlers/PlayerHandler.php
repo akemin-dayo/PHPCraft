@@ -86,8 +86,12 @@ class PlayerHandler {
 
 		$Coordinates3D = new Coordinates3D($x, $y, $z);
 
+		if ($Server->packetDumpingEnabled) {
+			$Server->Logger->throwLog($Client->username . " used block/item ID: " . $Packet->blockid . " (" . sprintf('0x%02X', $Packet->blockid) . ")");
+		}
+
 		if ($Packet->blockid == 0xFFFF) {
-			return $Server->sendMessage("Use item not implemented yet!");
+			return $Server->sendMessage("Interacting with blocks/items hasn't been implemented yet!");
 		}
 
 		if (!$Server->EntityManager->checkForBlockingEntities($Coordinates3D)) {

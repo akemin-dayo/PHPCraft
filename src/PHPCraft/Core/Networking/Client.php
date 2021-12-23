@@ -36,7 +36,7 @@ class Client {
 	public function __construct($connection, $server) {
 		$this->uuid = uniqid("client");
 		$this->connection = $connection;
-		$this->streamWrapper = new StreamWrapper($connection);
+		$this->streamWrapper = new StreamWrapper($connection, $server);
 		$this->Server = $server;
 		$this->World = $server->World;
 		$this->Inventory = new InventoryWindow($server->CraftingRepository);

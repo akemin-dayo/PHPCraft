@@ -209,7 +209,7 @@ class EntityManager {
 		$result = false;
 
 
-		// TODO(vy): Ensure we check for the entity height for the 3D bounding box.
+		// TODO (vy): Ensure we check for the entity height for the 3D bounding box.
 
 		foreach ($this->entities as $entity) {
 			$entityCoordinates = Coordinates3D::rounded($entity->Position);
