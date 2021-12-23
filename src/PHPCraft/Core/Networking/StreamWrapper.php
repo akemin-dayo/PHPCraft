@@ -188,7 +188,36 @@ class StreamWrapper {
 	/* ******************************** */
 
 	/*
-		string16
+		string8 (mUTF-8, with a prefixed short containing the string length)
+
+		Reference: https://wiki.vg/index.php?title=Protocol&oldid=510#Data_Types
+		See also: https://en.wikipedia.org/wiki/UTF-8#Modified_UTF-8
+	*/
+	public function readString8() {
+		$expectedStringLength = $this->readShort();
+		$constructedString = "";
+
+		for ($i = 0; $i < $expectedStringLength; $i++) {
+			$constructedString = $constructedString . chr($this->readShort());
+		}
+
+		// TODO (Karen): Properly convert from mUTF-8 to UTF-8 here.
+
+		if (strlen($constructedString) > 0) {
+			return $constructedString;
+		} else {
+			// TODO (Karen): Add proper error handling for when the string somehow ends up empty.
+		}
+	}
+	public function writeString8WithoutStringLengthShort($str) {
+		// TODO (Karen): Actually implement UTF-8 to mUTF-8 string conversion here.
+		return $str;
+	}
+	/* ******************************** */
+
+	/*
+		string16 (UCS-2 big endian, with a prefixed short containing the string length)
+
 		Reference: https://wiki.vg/index.php?title=Protocol&oldid=510#Data_Types
 	*/
 	public function readString16() {
@@ -206,7 +235,7 @@ class StreamWrapper {
 		}
 	}
 	public function writeString16WithoutStringLengthShort($str) {
-		$str = iconv("UTF-8", "UTF-16BE", $str);
+		$str = iconv("UTF-8", "UCS-2BE", $str);
 		return $str;
 	}
 	/* ******************************** */

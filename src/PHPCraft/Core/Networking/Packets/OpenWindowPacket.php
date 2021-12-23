@@ -22,8 +22,8 @@ class OpenWindowPacket {
 		$str = $StreamWrapper->writeByte(self::id) .
 			$StreamWrapper->writeByte($this->windowId) .
 			$StreamWrapper->writeByte($this->inventoryType) .
-			// TODO (Karen): Implement string8 support and use it here.
-			$StreamWrapper->writeString16WithoutStringLengthShort($this->windowTitle) .
+			$StreamWrapper->writeShort(strlen($this->windowTitle)) .
+			$StreamWrapper->writeString8WithoutStringLengthShort($this->windowTitle) .
 			$StreamWrapper->writeByte($this->numberOfSlots);
 
 		return $StreamWrapper->writePacket($str);
