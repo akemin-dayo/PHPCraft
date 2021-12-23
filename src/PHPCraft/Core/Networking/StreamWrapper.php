@@ -103,13 +103,12 @@ class StreamWrapper {
 		PHP pack() format: signed short (always 16 bit, machine byte order)
 	*/
 	public function readInt16() {
-		return unpack("s", strrev($this->read(2)))[1];
+		$readInt16BinaryBlob = $this->read(2);
+		return unpack("s", (BIG_ENDIAN) ? $readInt16BinaryBlob : strrev($readInt16BinaryBlob))[1];
 	}
 	public function writeInt16($data) {
-		if (BIG_ENDIAN) {
-			return pack("s", $data);
-		}
-		return strrev(pack("s", $data));
+		$writeInt16BinaryBlob = pack("s", $data);
+		return (BIG_ENDIAN) ? $writeInt16BinaryBlob : strrev($writeInt16BinaryBlob);
 	}
 	// Convenience aliases
 	public function readShort() {
@@ -125,13 +124,12 @@ class StreamWrapper {
 		PHP pack() format: signed long (always 32 bit, machine byte order)
 	*/
 	public function readInt() {
-		return unpack("l", strrev($this->read(4)))[1];
+		$readIntBinaryBlob = $this->read(4);
+		return unpack("l", (BIG_ENDIAN) ? $readIntBinaryBlob : strrev($readIntBinaryBlob))[1];
 	}
 	public function writeInt($data) {
-		if (BIG_ENDIAN) {
-			return pack('l', $data);
-		}
-		return strrev(pack("l", $data));
+		$writeIntBinaryBlob = pack("l", $data);
+		return (BIG_ENDIAN) ? $writeIntBinaryBlob : strrev($writeIntBinaryBlob);
 	}
 	/* ******************************** */
 
@@ -140,13 +138,12 @@ class StreamWrapper {
 		PHP pack() format: signed long long (always 64 bit, machine byte order)
 	*/
 	public function readLong() {
-		return unpack("q", strrev($this->read(8)))[1];
+		$readLongBinaryBlob = $this->read(8);
+		return unpack("q", (BIG_ENDIAN) ? $readLongBinaryBlob : strrev($readLongBinaryBlob))[1];
 	}
 	public function writeLong($data) {
-		if (BIG_ENDIAN) {
-			return pack('q', $data);
-		}
-		return strrev(pack("q", $data));
+		$writeLongBinaryBlob = pack("q", $data);
+		return (BIG_ENDIAN) ? $writeLongBinaryBlob : strrev($writeLongBinaryBlob);
 	}
 	/* ******************************** */
 
@@ -158,13 +155,12 @@ class StreamWrapper {
 			Consider switching to that instead.
 	*/
 	public function readFloat() {
-		return unpack("f", strrev($this->read(4)))[1];
+		$readIntBinaryBlob = $this->read(4);
+		return unpack("f", (BIG_ENDIAN) ? $readIntBinaryBlob : strrev($readIntBinaryBlob))[1];
 	}
 	public function writeFloat($data) {
-		if (BIG_ENDIAN) {
-			return pack("f", $data);
-		}
-		return strrev(pack("f", $data));
+		$writeFloatBinaryBlob = pack("f", $data);
+		return (BIG_ENDIAN) ? $writeFloatBinaryBlob : strrev($writeFloatBinaryBlob);
 	}
 	/* ******************************** */
 
@@ -176,13 +172,12 @@ class StreamWrapper {
 			Consider switching to that instead.
 	*/
 	public function readDouble() {
-		return unpack("d", strrev($this->read(8)))[1];
+		$readDoubleBinaryBlob = $this->read(8);
+		return unpack("d", (BIG_ENDIAN) ? $readDoubleBinaryBlob : strrev($readDoubleBinaryBlob))[1];
 	}
 	public function writeDouble($data) {
-		if (BIG_ENDIAN) {
-			return pack("d", $data);
-		}
-		return strrev(pack("d", $data));
+		$writeDoubleBinaryBlob = pack("d", $data);
+		return (BIG_ENDIAN) ? $writeDoubleBinaryBlob : strrev($writeDoubleBinaryBlob);
 	}
 	/* ******************************** */
 
