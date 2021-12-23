@@ -23,6 +23,18 @@ PHPCraft currently targets and supports Minecraft Beta b1.7.3 ([Beta Protocol 14
 
 ---
 
+## Screenshots
+
+![A screenshot of Minecraft 1.17.1 connected to a PHPCraft server, showing a small house that was built from wood planks, a small pond, a tree, and various rose and dandelion flowers scattered about.](screenshots/Minecraft%201.17.1%20-%2001%20Day.png)
+<p align="center">A Minecraft 1.17.1 client connected to a PHPCraft server via <a href="https://github.com/DirtPowered/DirtMultiversion" target="_blank">DirtMultiVersion</a> (and <a href="https://github.com/ViaVersion/ViaVersion" target="_blank">ViaVersion</a>). A Minecraft Beta b1.7.3 client was also connected to the PHPCraft server at the same time, viewing the same world.<br><em>(There are no doors or beds because those blocks do not work correctly yet in PHPCraft.)</em></p>
+
+![A screenshot of Minecraft 1.17.1 connected to a PHPCraft server, showing the interior of a small house that was built from wood planks. It is later in the day, and the sunlight is filtering through the glass roof. There are two furnaces, some bookshelves, a crafting table, a music player, a chair (actually an oak stair block), and a single stone slab intended to represent a desk.](screenshots/Minecraft%201.17.1%20-%2006%20Morning%20(Interior).png)
+<p align="center">The same Minecraft 1.17.1 client connected to the same PHPCraft server, but at a later time of day.</p>
+
+More screenshots can be found in the [screenshots folder](screenshots/) that include other times of day, as well as the Minecraft Beta b1.7.3 client that was also connected to the same PHPCraft server at the time.
+
+---
+
 ## How do I run PHPCraft?
 
 ### Prerequisites
