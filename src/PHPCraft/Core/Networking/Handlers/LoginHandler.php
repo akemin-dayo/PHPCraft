@@ -72,7 +72,7 @@ class LoginHandler {
 		} else {
 			// The client's version is not the same as this server implementation.
 			// So, we should disconnect that client with a 'Wrong Version' message.
-			$server->Logger->throwWarning("Wrong client version!");
+			$server->Logger->throwError("Wrong client version!");
 			$server->handleDisconnect($client, true, "Wrong client version!");
 		}
 	}
