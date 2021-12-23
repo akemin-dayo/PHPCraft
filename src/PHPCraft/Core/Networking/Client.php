@@ -103,7 +103,7 @@ class Client {
 	}
 
 	public function unloadChunk($Coordinates2D) {
-		$this->enqueuePacket(new ChunkPreamablePacket($Coordinates2D->x, $Coordiantes2D->z, false));
+		$this->enqueuePacket(new ChunkPreamablePacket($Coordinates2D->x, $Coordinates2D->z, false));
 		$serialized = $chunk->x . ":" . $chunk->z;
 		unset($this->loadedChunks[$serialized]);
 		$this->loadedChunks = array_values($array);

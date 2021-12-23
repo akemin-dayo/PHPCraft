@@ -29,6 +29,11 @@ class StreamWrapper {
 			Hex::dump($data);
 		}
 
+		if (is_null($data)) {
+			$this->Server->Logger->throwWarning("StreamWrapper somehow received null data! This should never happen.");
+			return;
+		}
+
 		$arr = array_reverse(str_split(bin2hex($data), 2));
 		$this->streamBuffer = array_merge($this->streamBuffer, $arr);
 	}
