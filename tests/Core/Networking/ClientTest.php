@@ -1,8 +1,8 @@
 <?php
 
 use Evenement\EventEmitter;
-use HHVMCraft\Core\Networking\MultiplayerServer;
-use HHVMCraft\Core\Networking\Client;
+use PHPCraft\Core\Networking\MultiplayerServer;
+use PHPCraft\Core\Networking\Client;
 /*
 
 class FakeConnection extends EventEmitter {

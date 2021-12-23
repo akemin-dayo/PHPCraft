@@ -1,9 +1,9 @@
 <?php
 
-use HHVMCraft\Core\World\World;
-use HHVMCraft\API\BlockProvider;
-use HHVMCraft\API\Coordinates3D;
-use HHVMCraft\API\Coordinates2D;
+use PHPCraft\Core\World\World;
+use PHPCraft\API\BlockProvider;
+use PHPCraft\API\Coordinates3D;
+use PHPCraft\API\Coordinates2D;
 
 class WorldTest extends PHPUnit_Framework_TestCase {
 	public function testWorldGeneration() {

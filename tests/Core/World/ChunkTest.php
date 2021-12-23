@@ -1,8 +1,8 @@
 <?php
 
-use HHVMCraft\Core\World\Chunk;
-use HHVMCraft\API\Coordinates3D;
-use HHVMCraft\API\Coordinates2D;
+use PHPCraft\Core\World\Chunk;
+use PHPCraft\API\Coordinates3D;
+use PHPCraft\API\Coordinates2D;
 
 class ChunkTest extends PHPUnit_Framework_TestCase {
 	public function testChunkGeneration() {

@@ -1,9 +1,9 @@
 # Project Setup
 
-`HHVMCraft.API` - Contains all the structs/objects
-`HHVMCraft.Core` - Contains core processing classes
+`PHPCraft.API` - Contains all the structs/objects
+`PHPCraft.Core` - Contains core processing classes
 
-# HHVMCraft Server Architecture
+# PHPCraft Server Architecture
 
 Main Server Thread:
 

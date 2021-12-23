@@ -1,50 +1,57 @@
-![logo](https://github.com/andrewvy/HHVMCraft/raw/master/docs/hhvmcraft.png)
+# PHPCraft
+###### An open-source Minecraft server implementation, written in PHP.
 
-Works on PHP 7.0.0 RC6 and HHVM 3.10.1!
+## What is PHPCraft?
 
-[![Build Status](https://travis-ci.org/andrewvy/HHVMCraft.svg?branch=master)](https://travis-ci.org/andrewvy/HHVMCraft)
+PHPCraft is an open-source Minecraft server implementation, written in PHP.
 
-A Minecraft Beta 1.7.3 Server implemented in PHP, based off of 
-[Truecraft's implementation](https://github.com/SirCmpwn/TrueCraft). Powered by [ReactPHP](http://reactphp.org/) (with some parts patched).
+That being said, PHPCraft is not intended to ever become a fully-functional, production-ready Minecraft server. Rather, it is just a for-fun project that I became interested in one day.
 
-![demo](https://github.com/andrewvy/HHVMCraft/raw/master/docs/demo-2.png)
+PHPCraft is a fork of [Andrew Vy](https://github.com/andrewvy)'s [HHVMCraft](https://github.com/andrewvy/HHVMCraft) project.
 
-The goal of this project is not to be a fully-functional server,
-but rather a proof-of-concept for PHP and HHVM.
+**※ Note:** While HHVMCraft _did_ (as the name would suggest) support HHVM, PHPCraft does not.
 
-### Installation?
+---
 
-You need composer!
+## Which Minecraft versions are supported?
 
-`composer install`
+PHPCraft currently targets and supports Minecraft Beta b1.7.3 ([Beta Protocol 14](https://wiki.vg/Protocol_version_numbers#Beta)), but you can connect to it with modern Minecraft versions (like 1.17.1!) using [DirtMultiVersion](https://github.com/DirtPowered/DirtMultiversion).
 
-and
+(I _would_ like to target/support a more modern Minecraft version at some point, but that would pretty much mean rewriting just about _all_ of the code from scratch and would be a _lot_ of work for what is again, just a project I'm doing for fun because I found it interesting.)
 
-`php server.php` or `hhvm server.php`!
+**※ Note:** Bedrock Edition clients (using [Geyser](https://github.com/GeyserMC/Geyser)) do not work correctly yet with PHPCraft for some reason (all blocks are invisible), despite the fact that Geyser _does_ work just fine with DirtMultiVersion when connected to other servers.
 
-Make sure you're using the b1.7.3 client! Check the `Allow use of Old Beta Minecraft Versions`.
+---
 
-![](https://cloud.githubusercontent.com/assets/2051361/11055769/2b601e68-872f-11e5-81f3-da8c1a9e83ff.png)
+## How do I run PHPCraft?
 
-### Why?
+### Prerequisites
+* PHP 8.x (recommended) or 7.x
+	* `brew install php` on macOS (requires [Homebrew](https://brew.sh/) to be installed)
+	* `sudo apt install php` on Debian-based Linux distributions
+	* [PHP for Windows](https://windows.php.net/download)
+		* The "Non Thread Safe" version is sufficient for our purposes, as PHPCraft only uses PHP on the CLI, and not as part of a web server.
+* Composer
+	* `brew install composer` on macOS (requires [Homebrew](https://brew.sh/) to be installed)
+	* Follow [these instructions](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos) on Linux
+	* Use [the Composer installer](https://getcomposer.org/Composer-Setup.exe) on Windows
 
-This is a little coding exercise/project, it's not intended to be a serious 
-application. :)
+### Running PHPCraft
+```shell
+git clone https://github.com/akemin-dayo/PHPCraft.git
+cd PHPCraft
+composer install
+php server.php
+```
 
-As you can tell, this is not the most performant implementation. It's being
-developed in a way that's fast to code, and readable.
+---
 
-I am also not a PHP programmer, or an advanced-level programmer, nor do I know much about socket programming! ;)
+## Useful developer resources
+* [Protocol specification for Minecraft Beta b1.7.3 (Beta Protocol 14) on wiki.vg (oldid 510)](https://wiki.vg/index.php?title=Protocol&oldid=510)
+	* This is the last page revision pertaining to Beta Protocol 14, made on 2011/08/14.
 
-So if you have any comments or if you have any crazy fun/interesting ideas for me to consider, please feel free to create an Github issue!
+---
 
-## Current Progress
+## License
 
-View [Things to make functional demo](https://github.com/andrewvy/HHVMCraft/issues/1)!
-
-## Libraries used
-
-[Evenement](https://github.com/igorw/evenement) - Event Dispatching Library  
-[ReactPHP](https://github.com/reactphp/react) - Low-level async event-driven library for PHP.  
-[PHPUnit](https://phpunit.de) - PHP Testing Framework  
-[Monolog](https://github.com/Seldaek/monolog) - Logging Framework  
+Licensed under the [MIT License](https://opensource.org/licenses/MIT).

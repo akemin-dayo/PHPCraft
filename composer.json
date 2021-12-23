@@ -1,23 +1,27 @@
 {
-    "name": "hhvmcraft",
-    "description": "A Minecraft Beta 1.7.3 Server Implementation",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Andrew Vy",
-            "email": "andrew@andrewvy.com"
-        }
-    ],
-    "require": {
-        "react/react": "0.4.*",
-        "monolog/monolog": "~1.13"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "4.6.*"
-    },
-    "autoload": {
-		"psr-4": {
-			"HHVMCraft\\": "src/HHVMCraft/"
+	"name": "akemin_dayo/phpcraft",
+	"description": "An open-source Minecraft server implementation, written in PHP.",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Andrew Vy",
+			"email": "andrew@andrewvy.com"
+		},
+		{
+			"name": "Karen/あけみ",
+			"email": "karen@akemi.ai"
 		}
-    }
+	],
+	"require": {
+		"react/react": "0.4.*",
+		"monolog/monolog": "~1.13"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "4.6.*"
+	},
+	"autoload": {
+		"psr-4": {
+			"PHPCraft\\": "src/PHPCraft/"
+		}
+	}
 }
