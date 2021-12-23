@@ -13,6 +13,6 @@ class EntityMetadataPacket {
 	public function readPacket(StreamWrapper $StreamWrapper) {
 		$this->eid = $StreamWrapper->readInt();
 
-		// TODO (vy): Implement metadata parsing..
+		// TODO (vy): Implement metadata parsing.
 	}
 }

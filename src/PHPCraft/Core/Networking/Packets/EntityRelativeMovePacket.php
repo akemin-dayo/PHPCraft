@@ -19,11 +19,11 @@ class EntityRelativeMovePacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 			$StreamWrapper->writeInt($this->eid) .
-			$StreamWrapper->writeInt8($this->dX) .
-			$StreamWrapper->writeInt8($this->dY) .
-			$StreamWrapper->writeInt8($this->dZ);
+			$StreamWrapper->writeByte($this->dX) .
+			$StreamWrapper->writeByte($this->dY) .
+			$StreamWrapper->writeByte($this->dZ);
 
 		return $StreamWrapper->writePacket($str);
 	}

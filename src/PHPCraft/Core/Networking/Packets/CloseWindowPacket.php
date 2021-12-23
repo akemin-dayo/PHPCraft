@@ -9,6 +9,13 @@ class CloseWindowPacket {
 	public $windowId;
 
 	public function readPacket(StreamWrapper $StreamWrapper) {
-		$this->windowId = $StreamWrapper->readInt8();
+		$this->windowId = $StreamWrapper->readByte();
+	}
+
+	public function writePacket(StreamWrapper $StreamWrapper) {
+		$packetToClient = $StreamWrapper->writeByte(self::id) .
+		$StreamWrapper->writeByte($this->windowId);
+
+		return $StreamWrapper->writePacket($packetToClient);
 	}
 }

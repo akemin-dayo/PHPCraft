@@ -19,11 +19,12 @@ class OpenWindowPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
-			$StreamWrapper->writeInt8($this->windowId) .
-			$StreamWrapper->writeInt8($this->inventoryType) .
-			$StreamWrapper->writeString16($this->windowTitle) .
-			$StreamWrapper->writeInt8($this->numberOfSlots);
+		$str = $StreamWrapper->writeByte(self::id) .
+			$StreamWrapper->writeByte($this->windowId) .
+			$StreamWrapper->writeByte($this->inventoryType) .
+			// TODO (Karen): Implement string8 support and use it here.
+			$StreamWrapper->writeString16WithoutStringLengthShort($this->windowTitle) .
+			$StreamWrapper->writeByte($this->numberOfSlots);
 
 		return $StreamWrapper->writePacket($str);
 	}

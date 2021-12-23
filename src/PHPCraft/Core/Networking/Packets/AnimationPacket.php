@@ -12,7 +12,14 @@ class AnimationPacket {
 
 	public function readPacket(StreamWrapper $StreamWrapper) {
 		$this->eid = $StreamWrapper->readInt();
-		$this->animate = $StreamWrapper->readInt8();
+		$this->animate = $StreamWrapper->readByte();
 	}
 
+	public function writePacket(StreamWrapper $StreamWrapper) {
+		$packetToClient = $StreamWrapper->writeByte(self::id) .
+		$StreamWrapper->writeInt($this->eid) .
+		$StreamWrapper->writeByte($this->animate);
+
+		return $StreamWrapper->writePacket($packetToClient);
+	}
 }

@@ -19,10 +19,10 @@ class PlayerDiggingPacket {
 	public $face;
 
 	public function readPacket(StreamWrapper $StreamWrapper) {
-		$this->status = $StreamWrapper->readInt8();
+		$this->status = $StreamWrapper->readByte();
 		$this->x = $StreamWrapper->readInt();
-		$this->y = $StreamWrapper->readInt8();
+		$this->y = $StreamWrapper->readByte();
 		$this->z = $StreamWrapper->readInt();
-		$this->face = $StreamWrapper->readInt8();
+		$this->face = $StreamWrapper->readByte();
 	}
 }

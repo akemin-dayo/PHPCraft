@@ -16,10 +16,10 @@ class ChunkPreamblePacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->x) .
 		$StreamWrapper->writeInt($this->z) .
-		$StreamWrapper->writeInt8($this->load);
+		$StreamWrapper->writeBool($this->load);
 
 		return $StreamWrapper->writePacket($str);
 	}

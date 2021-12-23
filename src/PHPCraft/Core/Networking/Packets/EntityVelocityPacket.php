@@ -19,11 +19,11 @@ class EntityVelocityPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->entityId) .
-		$StreamWrapper->writeInt16($this->xVel) .
-		$StreamWrapper->writeInt16($this->yVel) .
-		$StreamWrapper->writeInt16($this->zVel);
+		$StreamWrapper->writeShort($this->xVel) .
+		$StreamWrapper->writeShort($this->yVel) .
+		$StreamWrapper->writeShort($this->zVel);
 
 		return $StreamWrapper->writePacket($str);
 	}

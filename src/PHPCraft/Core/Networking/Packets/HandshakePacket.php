@@ -15,9 +15,4 @@ class HandshakePacket {
 	public function readPacket(StreamWrapper $StreamWrapper) {
 		$this->username = $StreamWrapper->readString16();
 	}
-
-	public function writePacket(StreamWrapper $stream) {
-
-	}
-
 }

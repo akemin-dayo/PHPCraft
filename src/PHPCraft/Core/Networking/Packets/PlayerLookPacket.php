@@ -12,8 +12,8 @@ class PlayerLookPacket {
 	public $onGround;
 
 	public function readPacket(StreamWrapper $StreamWrapper) {
-		$this->yaw = $StreamWrapper->readInt();
-		$this->pitch = $StreamWrapper->readInt();
+		$this->yaw = $StreamWrapper->readFloat();
+		$this->pitch = $StreamWrapper->readFloat();
 		$this->onGround = $StreamWrapper->readBool();
 	}
 }

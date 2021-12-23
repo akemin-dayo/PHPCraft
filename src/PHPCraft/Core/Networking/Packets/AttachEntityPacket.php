@@ -15,7 +15,7 @@ class AttachEntityPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$p = $StreamWrapper->writeInt8(self::id) .
+		$p = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->entity_id) .
 		$StreamWrapper->writeInt($this->vehicle_id);
 

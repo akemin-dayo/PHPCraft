@@ -8,11 +8,11 @@ class KeepAlivePacket {
 	const id = 0x00;
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id);
+		$str = $StreamWrapper->writeByte(self::id);
 		return $StreamWrapper->writePacket($str);
 	}
 
 	public function readPacket(StreamWrapper $StreamWrapper) {
-		$StreamWrapper->readInt8();
+		$StreamWrapper->readByte();
 	}
 }

@@ -12,7 +12,6 @@ class EntityActionPacket {
 
 	public function readPacket(StreamWrapper $StreamWrapper) {
 		$this->eid = $StreamWrapper->readInt();
-		$this->action = $StreamWrapper->readInt8();
+		$this->action = $StreamWrapper->readByte();
 	}
-
 }

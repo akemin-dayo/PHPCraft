@@ -20,12 +20,12 @@ class PacketReader {
 
 	public function registerPackets() {
 		// Register new packet type. type: packet, serverbound: bool, clientbound: bool.
-		$this->registerPacketType('Packets\KeepAlivePacket', true, false);
+		$this->registerPacketType('Packets\KeepAlivePacket');
 		$this->registerPacketType('Packets\LoginRequestPacket', true, false);
 		$this->registerPacketType('Packets\LoginResponsePacket', false, true);
 		$this->registerPacketType('Packets\HandshakePacket', true, false);
 		$this->registerPacketType('Packets\HandshakeResponsePacket', false, true);
-		$this->registerPacketType('Packets\ChatMessagePacket', true, true);
+		$this->registerPacketType('Packets\ChatMessagePacket');
 		$this->registerPacketType('Packets\TimeUpdatePacket', false, true);
 		$this->registerPacketType('Packets\EntityEquipmentPacket', false, true);
 		$this->registerPacketType('Packets\SpawnPositionPacket', false, true);
@@ -80,14 +80,14 @@ class PacketReader {
 		$this->registerPacketType('Packets\SetSlotPacket', false, true);
 		$this->registerPacketType('Packets\WindowItemsPacket', false, true);
 		$this->registerPacketType('Packets\UpdateProgressBarPacket', false, true);
-//		$this->registerPacketType(Packets\TransactionStatusPacket, false, true);
+//		$this->registerPacketType(Packets\TransactionStatusPacket);
 
-		$this->registerPacketType('Packets\UpdateSignPacket', false, true);
+		$this->registerPacketType('Packets\UpdateSignPacket');
 //		$this->registerPacketType(Packets\MapDataPacket, false, true);
 
 //		$this->registerPacketType(Packets\UpdateStatisticPacket, false, true);
 
-		$this->registerPacketType('Packets\DisconnectPacket', true, true);
+		$this->registerPacketType('Packets\DisconnectPacket');
 
 	}
 

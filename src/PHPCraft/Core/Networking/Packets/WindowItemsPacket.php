@@ -14,16 +14,16 @@ class WindowItemsPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
-		$StreamWrapper->writeInt8($this->windowId) .
-		$StreamWrapper->writeInt16(count($this->items));
+		$str = $StreamWrapper->writeByte(self::id) .
+		$StreamWrapper->writeByte($this->windowId) .
+		$StreamWrapper->writeShort(count($this->items));
 
 		for ($i = 0; $i < count($this->items); $i++) {
-			$str = $str . $StreamWrapper->writeInt16($this->items[$i]->id);
+			$str = $str . $StreamWrapper->writeShort($this->items[$i]->id);
 
 			if (!$this->items[$i]->isEmpty()) {
-				$str = $str . $StreamWrapper->writeInt8($this->items[$i]->icount) .
-				$StreamWrapper->writeInt16($this->items[$i]->metadata);
+				$str = $str . $StreamWrapper->writeByte($this->items[$i]->icount) .
+				$StreamWrapper->writeShort($this->items[$i]->metadata);
 			}
 		}
 

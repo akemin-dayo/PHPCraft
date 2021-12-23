@@ -25,14 +25,14 @@ class SetPlayerPositionPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeDouble($this->x) .
 		$StreamWrapper->writeDouble($this->stance) .
 		$StreamWrapper->writeDouble($this->y) .
 		$StreamWrapper->writeDouble($this->z) .
-		$StreamWrapper->writeInt($this->yaw) .
-		$StreamWrapper->writeInt($this->pitch) .
-		$StreamWrapper->writeInt8($this->onGround);
+		$StreamWrapper->writeFloat($this->yaw) .
+		$StreamWrapper->writeFloat($this->pitch) .
+		$StreamWrapper->writeBool($this->onGround);
 
 		return $StreamWrapper->writePacket($str);
 	}

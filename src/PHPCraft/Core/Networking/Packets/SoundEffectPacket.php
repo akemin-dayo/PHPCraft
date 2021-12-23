@@ -21,10 +21,10 @@ class SoundEffectPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 			$StreamWrapper->writeInt($this->effectId) .
 			$StreamWrapper->writeInt($this->x) .
-			$StreamWrapper->writeInt8($this->y) .
+			$StreamWrapper->writeByte($this->y) .
 			$StreamWrapper->writeInt($this->z) .
 			$StreamWrapper->writeInt($this->soundData);
 

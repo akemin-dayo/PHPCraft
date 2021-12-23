@@ -13,7 +13,7 @@ class TimeUpdatePacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeLong($this->time);
 
 		return $StreamWrapper->writePacket($str);

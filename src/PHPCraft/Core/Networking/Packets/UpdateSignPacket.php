@@ -24,19 +24,29 @@ class UpdateSignPacket {
 		$this->text4 = $text4;
 	}
 
+	public function readPacket(StreamWrapper $StreamWrapper) {
+		$this->x = $StreamWrapper->readInt();
+		$this->y = $StreamWrapper->readShort();
+		$this->z = $StreamWrapper->readInt();
+		$this->text1 = $StreamWrapper->readString16();
+		$this->text2 = $StreamWrapper->readString16();
+		$this->text3 = $StreamWrapper->readString16();
+		$this->text4 = $StreamWrapper->readString16();
+	}
+
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 			$StreamWrapper->writeInt($this->x) .
-			$StreamWrapper->writeInt16($this->y) .
+			$StreamWrapper->writeShort($this->y) .
 			$StreamWrapper->writeInt($this->z) .
-			$StreamWrapper->writeInt16($this->text1) .
-			$StreamWrapper->writeString16($this->text1) .
-			$StreamWrapper->writeInt16($this->text2) .
-			$StreamWrapper->writeString16($this->text2) .
-			$StreamWrapper->writeInt16($this->text3) .
-			$StreamWrapper->writeString16($this->text3) .
-			$StreamWrapper->writeInt16($this->text4) .
-			$StreamWrapper->writeString16($this->text4);
+			$StreamWrapper->writeShort($this->text1) .
+			$StreamWrapper->writeString16WithoutStringLengthShort($this->text1) .
+			$StreamWrapper->writeShort($this->text2) .
+			$StreamWrapper->writeString16WithoutStringLengthShort($this->text2) .
+			$StreamWrapper->writeShort($this->text3) .
+			$StreamWrapper->writeString16WithoutStringLengthShort($this->text3) .
+			$StreamWrapper->writeShort($this->text4) .
+			$StreamWrapper->writeString16WithoutStringLengthShort($this->text4);
 
 		return $StreamWrapper->writePacket($str);
 	}

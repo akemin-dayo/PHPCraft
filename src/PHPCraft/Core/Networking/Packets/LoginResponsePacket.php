@@ -17,11 +17,11 @@ class LoginResponsePacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$p = $StreamWrapper->writeInt8(self::id) .
+		$p = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->EntityID) .
-		$StreamWrapper->writeInt16(0) .
+		$StreamWrapper->writeShort(0) .
 		$StreamWrapper->writeLong($this->Seed) .
-		$StreamWrapper->writeInt8($this->Dimension);
+		$StreamWrapper->writeByte($this->Dimension);
 
 		return $StreamWrapper->writePacket($p);
 	}

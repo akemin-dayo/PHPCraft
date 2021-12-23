@@ -13,9 +13,8 @@ class LoginRequestPacket {
 		$this->protocolVersion = $StreamWrapper->readInt();
 		$this->username = $StreamWrapper->readString16();
 
-		// These bytes are not used..
-
+		// These bytes are not used…
 		$StreamWrapper->readLong();
-		$StreamWrapper->readInt8();
+		$StreamWrapper->readByte();
 	}
 }

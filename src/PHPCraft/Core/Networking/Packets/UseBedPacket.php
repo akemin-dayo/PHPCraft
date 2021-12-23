@@ -13,12 +13,14 @@ class UseBedPacket {
 	public $y;
 	public $z;
 
-	public function readPacket(StreamWrapper $StreamWrapper) {
-		$this->eid = $StreamWrapper->readInt();
-		$this->in_bed = $StreamWrapper->readInt8();
-		$this->x = $StreamWrapper->readInt();
-		$this->y = $StreamWrapper->readInt8();
-		$this->z = $StreamWrapper->readInt();
-	}
+	public function writePacket(StreamWrapper $StreamWrapper) {
+		$packetToClient = $StreamWrapper->writeByte(self::id) .
+		$StreamWrapper->writeInt($this->eid) .
+		$StreamWrapper->writeInt8($this->in_bed) .
+		$StreamWrapper->writeInt($this->x) .
+		$StreamWrapper->writeInt8($this->y) .
+		$StreamWrapper->writeInt($this->z);
 
+		return $StreamWrapper->writePacket($packetToClient);
+	}
 }

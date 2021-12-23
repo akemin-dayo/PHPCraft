@@ -13,7 +13,7 @@ class DestroyEntityPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->entityId);
 
 		return $StreamWrapper->writePacket($str);

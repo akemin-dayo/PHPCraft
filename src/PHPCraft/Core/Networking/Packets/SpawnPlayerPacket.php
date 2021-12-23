@@ -27,16 +27,16 @@ class SpawnPlayerPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->entityId) .
-		$StreamWrapper->writeInt16(strlen($this->playerName)) .
-		$StreamWrapper->writeString16($this->playerName) .
+		$StreamWrapper->writeShort(strlen($this->playerName)) .
+		$StreamWrapper->writeString16WithoutStringLengthShort($this->playerName) .
 		$StreamWrapper->writeInt($this->x) .
 		$StreamWrapper->writeInt($this->y) .
 		$StreamWrapper->writeInt($this->z) .
-		$StreamWrapper->writeInt8($this->yaw) .
-		$StreamWrapper->writeInt8($this->pitch) .
-		$StreamWrapper->writeInt16($this->currentItem);
+		$StreamWrapper->writeByte($this->yaw) .
+		$StreamWrapper->writeByte($this->pitch) .
+		$StreamWrapper->writeShort($this->currentItem);
 
 		return $StreamWrapper->writePacket($str);
 	}

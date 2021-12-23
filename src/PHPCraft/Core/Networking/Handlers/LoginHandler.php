@@ -17,7 +17,7 @@ class LoginHandler {
 	public static function HandleHandshake($packet, $client, $server) {
 		$client->username = $packet->username;
 
-		// Sends the string "-" to indicate that no account authentication should take place.
+		// Send a connection hash of "-" to indicate that no account authentication should take place.
 		$client->enqueuePacket(new HandshakeResponsePacket("-"));
 	}
 

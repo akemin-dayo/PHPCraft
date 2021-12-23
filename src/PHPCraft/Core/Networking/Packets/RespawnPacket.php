@@ -13,12 +13,12 @@ class RespawnPacket {
 	}
 
 	public function readPacket(StreamWrapper $StreamWrapper) {
-		$this->world = $StreamWrapper->readInt8();
+		$this->world = $StreamWrapper->readByte();
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
-			$StreamWrapper->writeInt8($this->world);
+		$str = $StreamWrapper->writeByte(self::id) .
+			$StreamWrapper->writeByte($this->world);
 
 		return $StreamWrapper->writePacket($str);
 	}

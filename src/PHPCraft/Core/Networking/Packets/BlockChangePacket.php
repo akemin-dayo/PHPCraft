@@ -20,12 +20,12 @@ class BlockChangePacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
+		$str = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->x) .
-		$StreamWrapper->writeInt8($this->y) .
+		$StreamWrapper->writeByte($this->y) .
 		$StreamWrapper->writeInt($this->z) .
-		$StreamWrapper->writeInt8($this->blockId) .
-		$StreamWrapper->writeInt8($this->blockMetadata);
+		$StreamWrapper->writeByte($this->blockId) .
+		$StreamWrapper->writeByte($this->blockMetadata);
 
 		return $StreamWrapper->writePacket($str);
 	}

@@ -15,9 +15,9 @@ class EntityStatusPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$p = $StreamWrapper->writeInt8(self::id) .
+		$p = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->entity_id) .
-		$StreamWrapper->writeInt8($this->entity_status);
+		$StreamWrapper->writeByte($this->entity_status);
 
 		return $StreamWrapper->writePacket($p);
 	}

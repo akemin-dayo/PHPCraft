@@ -17,10 +17,10 @@ class UpdateProgressBarPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$p = $StreamWrapper->writeInt8(self::id) .
-		$StreamWrapper->writeInt8($this->window_id) .
-		$StreamWrapper->writeInt16($this->progress_bar) .
-		$StreamWrapper->writeInt16($this->progress_value);
+		$p = $StreamWrapper->writeByte(self::id) .
+		$StreamWrapper->writeByte($this->window_id) .
+		$StreamWrapper->writeShort($this->progress_bar) .
+		$StreamWrapper->writeShort($this->progress_value);
 
 		return $StreamWrapper->writePacket($p);
 	}

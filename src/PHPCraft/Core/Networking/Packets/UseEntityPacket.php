@@ -14,7 +14,7 @@ class UseEntityPacket {
 	public function readPacket(StreamWrapper $StreamWrapper) {
 		$this->user = $StreamWrapper->readInt();
 		$this->target = $StreamWrapper->readInt();
-		$this->leftclick = $StreamWrapper->readInt8();
+		$this->leftclick = $StreamWrapper->readBool();
 	}
 
 }

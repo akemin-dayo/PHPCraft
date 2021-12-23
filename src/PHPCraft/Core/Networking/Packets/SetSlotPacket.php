@@ -21,12 +21,12 @@ class SetSlotPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$str = $StreamWrapper->writeInt8(self::id) .
-			$StreamWrapper->writeInt8($this->window_id) .
-			$StreamWrapper->writeInt16($this->slot) .
-			$StreamWrapper->writeInt16($this->item_id) .
-			$StreamWrapper->writeInt8($this->item_count) .
-			$StreamWrapper->writeInt16($this->item_uses);
+		$str = $StreamWrapper->writeByte(self::id) .
+			$StreamWrapper->writeByte($this->window_id) .
+			$StreamWrapper->writeShort($this->slot) .
+			$StreamWrapper->writeShort($this->item_id) .
+			$StreamWrapper->writeByte($this->item_count) .
+			$StreamWrapper->writeShort($this->item_uses);
 
 		return $StreamWrapper->writePacket($str);
 	}

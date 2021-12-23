@@ -17,14 +17,14 @@ class PlayerBlockPlacementPacket {
 
 	public function readPacket(StreamWrapper $StreamWrapper) {
 		$this->x = $StreamWrapper->readInt();
-		$this->y = $StreamWrapper->readInt8();
+		$this->y = $StreamWrapper->readByte();
 		$this->z = $StreamWrapper->readInt();
-		$this->direction = $StreamWrapper->readInt8();
-		$this->blockid = $StreamWrapper->readInt16();
+		$this->direction = $StreamWrapper->readByte();
+		$this->blockid = $StreamWrapper->readShort();
 
 		if ($this->blockid >= 0x00) {
-			$this->amount = $StreamWrapper->readInt8();
-			$this->damage = $StreamWrapper->readInt16();
+			$this->amount = $StreamWrapper->readByte();
+			$this->damage = $StreamWrapper->readShort();
 		}
 	}
 

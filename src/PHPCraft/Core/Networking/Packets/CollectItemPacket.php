@@ -15,12 +15,11 @@ class CollectItemPacket {
 		$this->collector_eid = $collector_eid;
 	}
 
-	public function readPacket(StreamWrapper $StreamWrapper) {
-		$this->collected_eid = $StreamWrapper->readInt();
-		$this->collector_eid = $StreamWrapper->readInt();
-	}
-
 	public function writePacket(StreamWrapper $StreamWrapper) {
+		$packetToClient = $StreamWrapper->writeByte(self::id) .
+		$StreamWrapper->writeInt($this->collected_eid) .
+		$StreamWrapper->writeInt($this->collector_eid);
 
+		return $StreamWrapper->writePacket($packetToClient);
 	}
 }

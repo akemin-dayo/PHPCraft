@@ -13,8 +13,8 @@ class UpdateHealthPacket {
 	}
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
-		$p = $StreamWrapper->writeInt8(self::id) .
-			$StreamWrapper->writeInt16($this->health);
+		$p = $StreamWrapper->writeByte(self::id) .
+			$StreamWrapper->writeShort($this->health);
 
 		return $StreamWrapper->writePacket($p);
 	}

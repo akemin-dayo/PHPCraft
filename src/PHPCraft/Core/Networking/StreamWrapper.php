@@ -205,7 +205,7 @@ class StreamWrapper {
 			// TODO (Karen): Add proper error handling for when the string somehow ends up empty.
 		}
 	}
-	public function writeString16($str) {
+	public function writeString16WithoutStringLengthShort($str) {
 		$str = iconv("UTF-8", "UTF-16BE", $str);
 		return $str;
 	}
