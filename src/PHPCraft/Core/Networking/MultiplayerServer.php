@@ -18,6 +18,7 @@ use PHPCraft\Core\Networking\Handlers;
 use PHPCraft\Core\Networking\PackerReader;
 use PHPCraft\Core\Networking\Packets\ChatMessagePacket;
 use PHPCraft\Core\Networking\Packets\KeepAlivePacket;
+use PHPCraft\Core\Networking\Packets\TimeUpdatePacket;
 use PHPCraft\Core\World\World;
 use React\Socket\Server;
 
@@ -68,11 +69,23 @@ class MultiplayerServer extends EventEmitter {
 
 		$this->loop->addPeriodicTimer($this->tickRate, function () {
 			$this->EntityManager->update();
+			$this->World->updateTime();
+
+			// Broadcasting on every tick currently crashes b1.7.3 clients, but works just fine with modern ones, somehow.
+
+			// That being said, I think broadcasting a TimeUpdatePacket on every second is good enough to at least prevent client-side time drift.
+
+			// PHPCraft doesn't have any fancy features like TPS adjustment that would make this an issue (yet), anyway.
+			// (Some servers let you set the TPS higher than 20, so time goes by faster.)
+
+			// $this->broadcastPacket(new TimeUpdatePacket($this->World->getTime()));
 		});
 
 		$this->loop->addPeriodicTimer(1, function () {
 			$this->emitKeepAlive();
-			$this->World->updateTime();
+			// Broadcast a TimeUpdatePacket every second to prevent client-side time drift.
+			// See above for more information.
+			$this->broadcastPacket(new TimeUpdatePacket($this->World->getTime()));
 		});
 
 		$this->Logger->throwLog("Listening on address: " . $this->address . ":" . $port);

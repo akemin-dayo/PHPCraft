@@ -6,6 +6,7 @@ use PHPCraft\API\Coordinates3D;
 use PHPCraft\Core\Networking\Packets\WindowItemsPacket;
 use PHPCraft\Core\Networking\Packets\UpdateHealthPacket;
 use PHPCraft\Core\Networking\Packets\BlockChangePacket;
+use PHPCraft\Core\Networking\Packets\TimeUpdatePacket;
 
 class ChatHandler {
 	public static function HandleChatMessage($Packet, $Client, $Server) {
@@ -34,6 +35,7 @@ class ChatHandler {
 				$Client->sendMessage("/ping: Pong!");
 				$Client->sendMessage("/rename <name>: Changes your name.");
 				$Client->sendMessage("/sethealth <0-20>: Sets your health value.");
+				$Client->sendMessage("/time [preset or numerical]: Shows or sets the world time.");
 				$Client->sendMessage("/version: Shows information about the PHPCraft server.");
 				break;
 			case "/buffer":
@@ -83,12 +85,14 @@ class ChatHandler {
 				if ($args_count == 1 || !is_numeric($args[1])) {
 					$Client->sendMessage("A numerical block/item ID is required!");
 					$Client->sendMessage("Usage: /give <block/item ID> [quantity]");
+					$Client->sendMessage("Valid block IDs are 1-96, and valid item IDs are 256-359.");
 					break;
 				}
 
 				if ($args_count == 3 && !is_numeric($args[2])) {
 					$Client->sendMessage("Item quantity can only include numbers!");
 					$Client->sendMessage("Usage: /give <block/item ID> [quantity]");
+					$Client->sendMessage("Valid block IDs are 1-96, and valid item IDs are 256-359.");
 					break;
 				} else if ($args_count == 3) {
 					$item_count = (int)$args[2];
@@ -143,6 +147,46 @@ class ChatHandler {
 			case "/icanhasphpcraft":
 				// TODO (Karen): Make this actually show the Git version info.
 				$Server->sendMessage("This server is running PHPCraft (MC: b1.7.3 / Beta Protocol 14)");
+				break;
+			case "/time":
+				if ($args_count == 1) {
+					$Client->sendMessage("The current world time is " . $Server->World->getTime() . " ticks.");
+					break;
+				}
+
+				$desiredTime = $args[1];
+
+				if (!is_numeric($desiredTime)) {
+					switch($desiredTime) {
+						case "day":
+							$desiredTime = 0;
+							break;
+						case "morning":
+							$desiredTime = 1000;
+							break;
+						case "default":
+							$desiredTime = 4020;
+							break;
+						case "noon":
+							$desiredTime = 6000;
+							break;
+						case "sunset":
+							$desiredTime = 12000;
+							break;
+						case "night":
+							$desiredTime = 14000;
+							break;
+						default:
+							$Client->sendMessage($desiredTime . " is not a valid time preset!");
+							$Client->sendMessage("Usage: /time [preset or numerical]");
+							$Client->sendMessage("Presets: day (0), morning (1000), default (4020), noon (6000), sunset (12000), night (14000)");
+							return;
+					}
+				}
+
+				$Server->World->setTime($desiredTime);
+				$Server->broadcastPacket(new TimeUpdatePacket($Server->World->getTime()));
+				$Client->sendMessage("The world time was set to " . $desiredTime . " ticks!");
 				break;
 			default:
 				$Client->sendMessage($args[0] . " is not a valid command!");

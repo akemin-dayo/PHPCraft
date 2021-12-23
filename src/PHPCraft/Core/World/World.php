@@ -25,17 +25,22 @@ class World {
 		// World Time in Minecraft
 		// 20 server ticks per second
 		// 24000 ticks per day = 20 minutes a day
-		// 0 is sunrise, 6000 is noon, 12000 is sunset, 18000 is midnight
+		// 0 is sunrise ("day"), 6000 is noon, 12000 is sunset, 18000 is midnight
 		return $this->WorldTime;
 	}
 
+	public function setTime($targetWorldTime) {
+		$this->WorldTime=$targetWorldTime;
+		return $targetWorldTime;
+	}
+
 	public function updateTime() {
-		// Every second, increase worldtime by 20 ticks.
-//		if ($this->WorldTime == 24000) {
-//			$this->WorldTime = 0;
-//		} else {
-//			$this->WorldTime += 20;
-//		}
+		// Increase the world time by one tick for every server tick (at 20 TPS).
+		if ($this->WorldTime == 24000) {
+			$this->WorldTime = 0;
+		} else {
+			$this->WorldTime++;
+		}
 	}
 
 	public function getChunk($Coordinates2D) {
