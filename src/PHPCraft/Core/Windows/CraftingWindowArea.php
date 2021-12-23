@@ -28,7 +28,7 @@ class CraftingWindowArea extends WindowArea {
 			}
 		}
 
-		if ($current == null) {
+		if (is_null($current)) {
 			$this->Items[self::craftingOutput] = ItemStack::emptyStack();
 		} else {
 			$this->Items[self::craftingOutput] = $current->output();

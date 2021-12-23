@@ -20,7 +20,7 @@ class Window {
 		$from = $this->getArea($index);
 		$slot = $this->from[$index];
 
-		if ($slot == null) {
+		if (is_null($slot)) {
 			return;
 		}
 

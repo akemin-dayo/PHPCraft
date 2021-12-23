@@ -112,7 +112,7 @@ class PacketReader {
 			$type = $this->ServerboundPackets[0xFF];
 		}
 
-		if ($type == null) {
+		if (is_null($type)) {
 			$client->Server->Logger->throwError("Unrecognised packet ID: " . $id . " (" . sprintf('0x%02X', $id) . ")");
 			return;
 		}
