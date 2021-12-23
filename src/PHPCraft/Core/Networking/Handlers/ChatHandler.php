@@ -26,7 +26,8 @@ class ChatHandler {
 			case "/help":
 			case "/?":
 				$Client->sendMessage("--- PHPCraft Help ---");
-				$Client->sendMessage("/buffer: Shows the current size of the buffer, in bytes.");
+				$Client->sendMessage("/buffer: Shows the current size of the buffer for this client.");
+				$Client->sendMessage("/echo <text>: Prints whatever you type after it.");
 				$Client->sendMessage("/getpos: Shows information about your current position.");
 				$Client->sendMessage("/give <block/item ID> [quantity]: Gives you blocks or items.");
 				$Client->sendMessage("/heart: <3");
@@ -39,7 +40,7 @@ class ChatHandler {
 				$Client->sendMessage("/version: Shows information about the PHPCraft server.");
 				break;
 			case "/buffer":
-				$Client->sendMessage("Buffer size: " . count($Client->streamWrapper->streamBuffer) . " bytes");
+				$Client->sendMessage("Buffer size for this client: " . count($Client->streamWrapper->streamBuffer) . " bytes");
 				break;
 			case "/ping":
 				$Client->sendMessage("Pong!");
@@ -187,6 +188,16 @@ class ChatHandler {
 				$Server->World->setTime($desiredTime);
 				$Server->broadcastPacket(new TimeUpdatePacket($Server->World->getTime()));
 				$Client->sendMessage("The world time was set to " . $desiredTime . " ticks!");
+				break;
+			case "/echo":
+				$constructedEchoMessage = "";
+				if ($args_count > 1) {
+					// PHP implicitly makes a copy when assigned like this.
+					$inputStringArray = $args;
+					array_shift($inputStringArray);
+					$constructedEchoMessage = implode(" ", $inputStringArray);
+				}
+				$Client->sendMessage($constructedEchoMessage);
 				break;
 			default:
 				$Client->sendMessage($args[0] . " is not a valid command!");
