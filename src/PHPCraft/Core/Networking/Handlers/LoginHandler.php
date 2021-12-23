@@ -68,7 +68,7 @@ class LoginHandler {
 
 			$server->Logger->throwLog("Added new client!");
 			$server->sendMessage($client->username . " has joined the server!");
-
+			$server->sendMessage("Welcome to PHPCraft, " . $client->username . "!");
 		} else {
 			// The client's version is not the same as this server implementation.
 			// So, we should disconnect that client with a 'Wrong Version' message.
