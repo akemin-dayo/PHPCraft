@@ -44,28 +44,28 @@ class Chunk {
 	}
 
 	public function getMetadata($Coordinates3D) {
-		$this->lastAccessed = new \DateTime(null, new \DateTimeZone('Pacific/Nauru'));
+		$this->lastAccessed = new \DateTime();
 		$index = $Coordinates3D->y + ($Coordinates3D->z * self::Height) + ($Coordinates3D->x * self::Height * self::Width);
 
 		return $this->Metadata[$index];
 	}
 
 	public function getSkyLight($Coordinates3D) {
-		$this->lastAccessed = new \DateTime(null, new \DateTimeZone('Pacific/Nauru'));
+		$this->lastAccessed = new \DateTime();
 		$index = $Coordinates3D->y + ($Coordinates3D->z * self::Height) + ($Coordinates3D->x * self::Height * self::Width);
 
 		return $this->SkyLight[$index];
 	}
 
 	public function getBlockLight($Coordinates3D) {
-		$this->lastAccessed = new \DateTime(null, new \DateTimeZone('Pacific/Nauru'));
+		$this->lastAccessed = new \DateTime();
 		$index = $Coordinates3D->y + ($Coordinates3D->z * self::Height) + ($Coordinates3D->x * self::Height * self::Width);
 
 		return $this->getBlockLight[$index];
 	}
 
 	public function setBlockID($Coordinates3D, $val) {
-		$this->lastAccessed = new \DateTime(null, new \DateTimeZone('Pacific/Nauru'));
+		$this->lastAccessed = new \DateTime();
 		$this->isModified = true;
 		$index = $Coordinates3D->y + ($Coordinates3D->z * self::Height) + ($Coordinates3D->x * self::Height * self::Width);
 		$this->Blocks[$index] = $val;
@@ -87,20 +87,20 @@ class Chunk {
 
 
 	public function getHeight($x, $z) {
-		$this->lastAccessed = new \DateTime(null, new \DateTimeZone('Pacific/Nauru'));
+		$this->lastAccessed = new \DateTime();
 
 		return $this->HeightMap[$z * self::Depth + $x];
 	}
 
 	public function getBlockID($Coordinates3D) {
-		$this->lastAccessed = new \DateTime(null, new \DateTimeZone('Pacific/Nauru'));
+		$this->lastAccessed = new \DateTime();
 		$index = $Coordinates3D->y + ($Coordinates3D->z * self::Height) + ($Coordinates3D->x * self::Height * self::Width);
 
 		return $this->Blocks[$index];
 	}
 
 	public function setHeight($x, $z, $val) {
-		$this->lastAccessed = new \DateTime(null, new \DateTimeZone('Pacific/Nauru'));
+		$this->lastAccessed = new \DateTime();
 		$this->isModified = true;
 		$this->HeightMap[$z * self::Depth + $x] = $val;
 	}
