@@ -10,6 +10,7 @@ use PHPCraft\Core\Networking\Packets\SetPlayerPositionPacket;
 use PHPCraft\Core\Networking\Packets\SpawnPositionPacket;
 use PHPCraft\Core\Networking\Packets\TimeUpdatePacket;
 use PHPCraft\Core\Networking\Packets\WindowItemsPacket;
+use PHPCraft\Core\Networking\Packets\UpdateHealthPacket;
 
 class LoginHandler {
 
@@ -58,6 +59,9 @@ class LoginHandler {
 			$client->enqueuePacket(new TimeUpdatePacket(
 				$server->World->getTime())
 			);
+
+			// Send a full health packet to the client.
+			$client->enqueuePacket(new UpdateHealthPacket(20));
 
 			// Begin sending chunk data.
 			$client->updateChunks();

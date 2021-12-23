@@ -7,6 +7,7 @@ use PHPCraft\Core\Entities\PlayerEntity;
 use PHPCraft\Core\Networking\Packets\SetPlayerPositionPacket;
 use PHPCraft\Core\Networking\Packets\RespawnPacket;
 use PHPCraft\Core\Networking\Packets\BlockChangePacket;
+use PHPCraft\Core\Networking\Packets\UpdateHealthPacket;
 
 class PlayerHandler {
 
@@ -47,11 +48,12 @@ class PlayerHandler {
 		);
 
 		$Client->enqueuePacket(new RespawnPacket());
+		$Client->enqueuePacket(new UpdateHealthPacket(20));
 	}
 
 	public static function HandleBlockPlacement($Packet, $Client, $Server) {
 		// DIRECTION
-		//  0    1   2   3   4   5
+		//   0   1   2   3   4   5
 		//  -Y	+Y	-Z	+Z	-X	+X
 
 		$direction = $Packet->direction;
