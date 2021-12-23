@@ -117,7 +117,7 @@ class Coordinates3D {
 	}
 
 	public function toString() {
-		return sprintf('<%d, %d, %d>', $this->x, $this->y, $this->z);
+		return sprintf('<x: %d / y: %d / z: %d>', $this->x, $this->y, $this->z);
 	}
 
 	public function clamp($val) {
