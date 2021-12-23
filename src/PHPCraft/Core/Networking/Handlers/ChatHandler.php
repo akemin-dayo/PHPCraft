@@ -30,7 +30,7 @@ class ChatHandler {
 				$Client->sendMessage("Pong!");
 				break;
 			case "/kill":
-				$Client->enqueuePacket(new UpdateHealthPacket());
+				$Client->enqueuePacket(new UpdateHealthPacket(0));
 				break;
 			case "/sethealth":
 				if (!is_numeric($args[1])) {
