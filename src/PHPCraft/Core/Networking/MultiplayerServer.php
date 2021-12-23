@@ -33,7 +33,7 @@ class MultiplayerServer extends EventEmitter {
 	public $loop;
 	public $socket;
 
-	public $tickRate = 0.05;
+	public $tickRate = 1 / 20; // 20 ticks per second (TPS)
 
 	public function __construct($address) {
 		$this->address = $address;
