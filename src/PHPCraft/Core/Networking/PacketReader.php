@@ -102,6 +102,7 @@ class PacketReader {
 
 	public function readPacket($client, $serverbound = true) {
 		$id = $client->streamWrapper->readInt8();
+		$type = null;
 
 		if ($serverbound && isset($this->ServerboundPackets[$id])) {
 			$type = $this->ServerboundPackets[$id];
@@ -112,8 +113,7 @@ class PacketReader {
 		}
 
 		if ($type == null) {
-			$client->Server->Logger->throwError("Unrecognized Packet ID: " . $id);
-
+			$client->Server->Logger->throwError("Unrecognised packet ID: " . $id . " (" . sprintf('0x%02X', $id) . ")");
 			return;
 		}
 
