@@ -72,12 +72,12 @@ class ChatHandler {
 				$playerZPos = $Client->PlayerEntity->Position->z;
 
 				$playerCoordinates = new Coordinates3D($playerXPos, $playerYPos, $playerZPos);
-				// $playerYaw = $Client->PlayerEntity->Position->yaw;
-				// $playerPitch = $Client->PlayerEntity->Position->pitch;
+				$playerYaw = $Client->PlayerEntity->Position->yaw;
+				$playerPitch = $Client->PlayerEntity->Position->pitch;
 
 				$Client->sendMessage("Position: " . $playerCoordinates->toString());
-				// $Client->sendMessage("Yaw (Rotation, left-right): " . $playerYaw);
-				// $Client->sendMessage("Pitch (Head angle, up-down): " . $playerPitch);
+				$Client->sendMessage("Yaw (Rotation, left-right): " . $playerYaw);
+				$Client->sendMessage("Pitch (Head angle, up-down): " . $playerPitch);
 				break;
 			case "/give":
 				if ($args_count == 1 || !is_numeric($args[1])) {
