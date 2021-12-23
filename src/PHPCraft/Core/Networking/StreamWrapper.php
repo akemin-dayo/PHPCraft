@@ -100,15 +100,16 @@ class StreamWrapper {
 
 	/*
 		short (signed 16-bit integer)
-		PHP pack() format: unsigned short (always 16 bit, big endian byte order)
-
-		TODO (Karen) / WARNING: The pack() format being used here seems incorrect! (sign)
+		PHP pack() format: signed short (always 16 bit, machine byte order)
 	*/
 	public function readInt16() {
-		return unpack("n", $this->read(2))[1];
+		return unpack("s", strrev($this->read(2)))[1];
 	}
 	public function writeInt16($data) {
-		return pack("n", $data);
+		if (BIG_ENDIAN) {
+			return pack("s", $data);
+		}
+		return strrev(pack("s", $data));
 	}
 	// Convenience aliases
 	public function readShort() {
@@ -121,13 +122,10 @@ class StreamWrapper {
 
 	/*
 		int (signed 32-bit integer)
-		PHP pack() format for READ: unsigned long (always 32 bit, big endian byte order)
-		PHP pack() format for WRITE: signed long (always 32 bit, machine byte order)
-
-		TODO (Karen) / WARNING: The READ pack() format being used here seems incorrect! (sign)
+		PHP pack() format: signed long (always 32 bit, machine byte order)
 	*/
 	public function readInt() {
-		return unpack("N", $this->read(4))[1];
+		return unpack("l", strrev($this->read(4)))[1];
 	}
 	public function writeInt($data) {
 		if (BIG_ENDIAN) {
@@ -140,14 +138,15 @@ class StreamWrapper {
 	/*
 		long (signed 64-bit integer)
 		PHP pack() format: signed long long (always 64 bit, machine byte order)
-
-		TODO (Karen) / WARNING: These functions do not seem to handle endianness correctly!
 	*/
 	public function readLong() {
-		return unpack("q", $this->read(8))[1];
+		return unpack("q", strrev($this->read(8)))[1];
 	}
 	public function writeLong($data) {
-		return pack("q", $data);
+		if (BIG_ENDIAN) {
+			return pack('q', $data);
+		}
+		return strrev(pack("q", $data));
 	}
 	/* ******************************** */
 
