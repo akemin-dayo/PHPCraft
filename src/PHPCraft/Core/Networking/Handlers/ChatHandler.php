@@ -22,74 +22,132 @@ class ChatHandler {
 		$args_count = count($args);
 
 		switch ($args[0]) {
+			case "/help":
+			case "/?":
+				$Client->sendMessage("--- PHPCraft Help ---");
+				$Client->sendMessage("/buffer: Shows the current size of the buffer, in bytes.");
+				$Client->sendMessage("/getpos: Shows information about your current position.");
+				$Client->sendMessage("/give <block/item ID> [quantity]: Gives you blocks or items.");
+				$Client->sendMessage("/heart: <3");
+				$Client->sendMessage("/help or /?: Shows a list of commands.");
+				$Client->sendMessage("/kill or /suicide: Kills you.");
+				$Client->sendMessage("/ping: Pong!");
+				$Client->sendMessage("/rename <name>: Changes your name.");
+				$Client->sendMessage("/sethealth <0-20>: Sets your health value.");
+				$Client->sendMessage("/version: Shows information about the PHPCraft server.");
+				break;
 			case "/buffer":
-				$count = "Buffer is: ".count($Client->streamWrapper->streamBuffer);
-				$Client->sendMessage($count);
+				$Client->sendMessage("Buffer size: " . count($Client->streamWrapper->streamBuffer) . " bytes");
 				break;
 			case "/ping":
 				$Client->sendMessage("Pong!");
 				break;
 			case "/kill":
+			case "/suicide":
+				$Server->sendMessage($Client->username . " tripped over their own foot and died");
 				$Client->enqueuePacket(new UpdateHealthPacket(0));
 				break;
 			case "/sethealth":
 				if (!is_numeric($args[1])) {
-					return $Client->sendMessage("Number needed!");
+					$Client->sendMessage("A health value can only include numbers!");
+					$Client->sendMessage("Usage: /sethealth <0-20>");
+					break;
 				}
 
-				$Client->enqueuePacket(new UpdateHealthPacket($args[1]));
+				$targetHealth = (int)$args[1];
+				if ($targetHealth == 0) {
+					$Server->sendMessage($Client->username . " flopped over and died from some unknown malady");
+				} else if ($targetHealth > 0 && $targetHealth <= 20) {
+					$Client->sendMessage("Successfully set your health to " . $targetHealth . "!");
+				} else {
+					$Client->sendMessage("A health value must be between 0 to 20 (inclusive)!");
+					$Client->sendMessage("Usage: /sethealth <0-20>");
+					break;
+				}
+				$Client->enqueuePacket(new UpdateHealthPacket($targetHealth));
 				break;
 			case "/getpos":
-				$x = $Client->PlayerEntity->Position->x;
-				$y = $Client->PlayerEntity->Position->y;
-				$z = $Client->PlayerEntity->Position->z;
-				$coords = new Coordinates3D($x, $y, $z);
+				$playerXPos = $Client->PlayerEntity->Position->x;
+				$playerYPos = $Client->PlayerEntity->Position->y;
+				$playerZPos = $Client->PlayerEntity->Position->z;
 
-				$Client->sendMessage($coords->toString());
+				$playerCoordinates = new Coordinates3D($playerXPos, $playerYPos, $playerZPos);
+				// $playerYaw = $Client->PlayerEntity->Position->yaw;
+				// $playerPitch = $Client->PlayerEntity->Position->pitch;
+
+				$Client->sendMessage("Position: " . $playerCoordinates->toString());
+				// $Client->sendMessage("Yaw (Rotation, left-right): " . $playerYaw);
+				// $Client->sendMessage("Pitch (Head angle, up-down): " . $playerPitch);
 				break;
 			case "/give":
-				// give a stack of the given item id to the client
-				// /give 5 <- gives 64 of item_id: 5
-				// /give 5 32 <- gives 32 of item_id: 5
-
-				if (!is_numeric($args[1])) {
-					return $Client->sendMessage("/give [id] [count]. Numerical Item ID needed!");
+				if ($args_count == 1 || !is_numeric($args[1])) {
+					$Client->sendMessage("A numerical block/item ID is required!");
+					$Client->sendMessage("Usage: /give <block/item ID> [quantity]");
+					break;
 				}
 
 				if ($args_count == 3 && !is_numeric($args[2])) {
-					return $Client->sendMessage("/give [id] [count]. Numerical Item count needed!");
+					$Client->sendMessage("Item quantity can only include numbers!");
+					$Client->sendMessage("Usage: /give <block/item ID> [quantity]");
+					break;
 				} else if ($args_count == 3) {
-					$item_count = (int) $args[2];
+					$item_count = (int)$args[2];
 				} else {
-					$item_count = 0x40;
+					$item_count = 64;
 				}
 
-				$item_id = (int) $args[1];
+				// Officially speaking, Minecraft should only support stacking items up to 64 in one stack.
+				// That being said, it does seem like clients /can/ handle up to a maximum of 127 items in one stack for some reason.
+				if ($item_count > 127) {
+					$item_count = 127;
+				}
 
-				if ($item_id > 0x00) {
-					$Client->setItem($item_id, $item_count);
+				$blockOrItemID = (int)$args[1];
+
+				// Valid block IDs in b1.7.3: 1-96
+				// Valid item IDs in b1.7.3: 256-359
+				if (($blockOrItemID > 0 && $blockOrItemID < 97) || ($blockOrItemID > 255 && $blockOrItemID < 360)) {
+					$Client->setItem($blockOrItemID, $item_count);
 					$Client->enqueuePacket(new WindowItemsPacket(0, $Client->Inventory->getSlots()));
-					return $Client->sendMessage("Successfully gave a stack of " . $args[1]);
+					$Client->sendMessage("Gave " . $item_count . " of block/item ID " . $blockOrItemID . " to " . $Client->username);
 				} else {
-					return $Client->sendMessage("Item ID given was not a valid item id.");
+					$Client->sendMessage("The specified block/item ID (" . $blockOrItemID . ") is not valid.");
+					$Client->sendMessage("Valid block IDs are 1-96, and valid item IDs are 256-359.");
 				}
-
 				break;
 			case "/heart":
-				return $Client->sendMessage("<3");
+				$Client->sendMessage("<3");
 				break;
 			case "/rename":
-				if ($args_count != 2) { return; }
+				if ($args_count < 2) {
+					$Client->sendMessage("You must specify a name!");
+					$Client->sendMessage("Usage: /rename <name>");
+					break;
+				}
 
-				$Server->sendMessage($Client->username . " has changed their name to: " . $args[1]);
+				$desiredName = $args[1];
 
-				$Client->username = $args[1];
-				$Client->PlayerEntity->username = $args[1];
+				if (strlen($desiredName) > 16) {
+					$Client->sendMessage("Your name is too long! Names must be 16 characters or less.");
+					break;
+				}
+
+				$Server->sendMessage($Client->username . " has changed their name to " . $desiredName);
+
+				$Client->username = $desiredName;
+				$Client->PlayerEntity->username = $desiredName;
+				break;
+			case "/version":
+			case "/ver":
+			case "/about":
+			case "/icanhasphpcraft":
+				// TODO (Karen): Make this actually show the Git version info.
+				$Server->sendMessage("This server is running PHPCraft (MC: b1.7.3 / Beta Protocol 14)");
 				break;
 			default:
-				$Client->sendMessage("Command not recognized!");
+				$Client->sendMessage($args[0] . " is not a valid command!");
 		}
 	}
 
-	# TODO (vy): Port commands into their own functions here
+	// TODO (vy): Port commands into their own functions here
 }
