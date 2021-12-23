@@ -17,7 +17,7 @@ class ChatHandler {
 		}
 	}
 
-	public static function handleCommand($message="", $Client, $Server) {
+	public static function handleCommand($message, $Client, $Server) {
 		$args = explode(" ", $message);
 		$args_count = count($args);
 
