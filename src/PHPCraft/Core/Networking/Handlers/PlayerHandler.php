@@ -114,7 +114,7 @@ class PlayerHandler {
 		// This check must be performed against the decimal representation of -1 instead of the 16-bit two's complement representation of 0xFFFF.
 		// The reason as to why is… described above in that massive comment block. ;P
 		if ($Packet->blockid == -1) {
-			return $Server->sendMessage("Interacting with blocks/items hasn't been implemented yet!");
+			return $Client->sendMessage("Interacting with blocks/items hasn't been implemented yet!");
 		}
 
 		if (!$Server->EntityManager->checkForBlockingEntities($Coordinates3D)) {

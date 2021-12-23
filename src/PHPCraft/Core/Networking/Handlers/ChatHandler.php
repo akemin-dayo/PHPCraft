@@ -147,7 +147,7 @@ class ChatHandler {
 			case "/about":
 			case "/icanhasphpcraft":
 				// TODO (Karen): Make this actually show the Git version info.
-				$Server->sendMessage("This server is running PHPCraft (MC: b1.7.3 / Beta Protocol 14)");
+				$Client->sendMessage("This server is running PHPCraft (MC: b1.7.3 / Beta Protocol 14)");
 				break;
 			case "/time":
 				if ($args_count == 1) {
