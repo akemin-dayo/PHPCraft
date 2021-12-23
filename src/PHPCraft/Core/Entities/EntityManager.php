@@ -161,7 +161,7 @@ class EntityManager {
 	}
 
 	public function update() {
-		//    $this->PhysicsEngine->update();
+		// $this->PhysicsEngine->update();
 
 		foreach ($this->entities as $e) {
 			if ($e->Despawned == false) {
@@ -169,7 +169,9 @@ class EntityManager {
 			}
 		}
 
-		$this->flushDespawns();
+		// Temporary workaround for a crash that can occur when a player's y-position is too low (falling into the void).
+		// TODO (Karen): Properly fix this instead of just commenting out this function call.
+		// $this->flushDespawns();
 	}
 
 	public function flushDespawns() {
