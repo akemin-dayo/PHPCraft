@@ -4,8 +4,9 @@ use PHPCraft\Core\TerrainGen\FlatlandGenerator;
 use PHPCraft\Core\World\Chunk;
 use PHPCraft\API\Coordinates3D;
 use PHPCraft\API\Coordinates2D;
+use PHPUnit\Framework\TestCase;
 
-class FlatlandGeneratorTest extends PHPUnit_Framework_TestCase {
+class FlatlandGeneratorTest extends TestCase {
 	public function testCanGenerateLayers() {
 		$chunk1pos = new Coordinates3D(0,0);
 		$generator = new FlatlandGenerator();

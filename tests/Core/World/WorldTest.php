@@ -4,8 +4,9 @@ use PHPCraft\Core\World\World;
 use PHPCraft\API\BlockProvider;
 use PHPCraft\API\Coordinates3D;
 use PHPCraft\API\Coordinates2D;
+use PHPUnit\Framework\TestCase;
 
-class WorldTest extends PHPUnit_Framework_TestCase {
+class WorldTest extends TestCase {
 	public function testWorldGeneration() {
 		$chunkCoordinates = new Coordinates2D(0,0);
 		$blockCoordinates = new Coordinates3D(0,20,0);

@@ -13,11 +13,11 @@
 		}
 	],
 	"require": {
-		"react/react": "0.4.*",
-		"monolog/monolog": "~1.13"
+		"react/react": "^0.4",
+		"monolog/monolog": "^1"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "4.6.*"
+		"phpunit/phpunit": "^9"
 	},
 	"autoload": {
 		"psr-4": {
