@@ -89,27 +89,25 @@ class PlayerHandler {
 
 		$Coordinates3D = new Coordinates3D($x, $y, $z);
 
-		if ($Server->packetDumpingEnabled) {
-			/*
-				Simply using sprintf('0x%02X', $Packet->blockid) will not work correctly here.
+		/*
+			Simply using sprintf('0x%02X', $Packet->blockid) will not work correctly here.
 
-				This is because all integers in PHP are actually 64-bit (or 32-bit on 32-bit hosts).
-				Basically, a concept of a short (16-bit / 2-byte integer) simply does not exist.
+			This is because all integers in PHP are actually 64-bit (or 32-bit on 32-bit hosts).
+			Basically, a concept of a short (16-bit / 2-byte integer) simply does not exist.
 
-				As a result of this, when $Packet->blockid is -1…
-				It'll get converted to 0xFFFFFFFFFFFFFFFF, which is the 64-bit two's complement for -1.
+			As a result of this, when $Packet->blockid is -1…
+			It'll get converted to 0xFFFFFFFFFFFFFFFF, which is the 64-bit two's complement for -1.
 
-				With the below implementation however, we can successfully get a 16-bit two's complement for -1 (0xFFFF).
-					1. Pack $Packet->blockid into a binary blob of type `short` using pack()
-					2. If running on a little-endian system (you probably are), reverse the string using strrev()
-						※ This requires the BIG_ENDIAN const from PHPCraft\Core\Networking\StreamWrapper
-					3. Convert the binary blob into a hex string using bin2hex()
-					4. Convert the hex string into a decimal string using hexdec()
-					5. Feed the result into sprintf('0x%02X') which gives us nice, clean output.
-			*/
-			$blockid_shortBinBlob = pack("s", $Packet->blockid);
-			$Server->Logger->logDebug($Client->username . " used block/item ID: " . $Packet->blockid . " (" . sprintf('0x%02X', hexdec(bin2hex((BIG_ENDIAN) ? $blockid_shortBinBlob : strrev($blockid_shortBinBlob)))) . ")");
-		}
+			With the below implementation however, we can successfully get a 16-bit two's complement for -1 (0xFFFF).
+				1. Pack $Packet->blockid into a binary blob of type `short` using pack()
+				2. If running on a little-endian system (you probably are), reverse the string using strrev()
+					※ This requires the BIG_ENDIAN const from PHPCraft\Core\Networking\StreamWrapper
+				3. Convert the binary blob into a hex string using bin2hex()
+				4. Convert the hex string into a decimal string using hexdec()
+				5. Feed the result into sprintf('0x%02X') which gives us nice, clean output.
+		*/
+		$blockid_shortBinBlob = pack("s", $Packet->blockid);
+		$Server->Logger->logDebug($Client->username . " used block/item ID: " . $Packet->blockid . " (" . sprintf('0x%02X', hexdec(bin2hex((BIG_ENDIAN) ? $blockid_shortBinBlob : strrev($blockid_shortBinBlob)))) . ")");
 
 		// This check must be performed against the decimal representation of -1 instead of the 16-bit two's complement representation of 0xFFFF.
 		// The reason as to why is… described above in that massive comment block. ;P
