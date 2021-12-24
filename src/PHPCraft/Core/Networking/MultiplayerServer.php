@@ -24,6 +24,7 @@ use React\Socket\Server;
 
 class MultiplayerServer extends EventEmitter {
 	public $address;
+	public $serverName;
 	public $packetDumpingEnabled;
 
 	public $Clients = [];
@@ -38,8 +39,9 @@ class MultiplayerServer extends EventEmitter {
 
 	public $tickRate = 1 / 20; // 20 ticks per second (TPS)
 
-	public function __construct($address, $packetDumpingEnabled) {
+	public function __construct($address, $serverName, $packetDumpingEnabled) {
 		$this->address = $address;
+		$this->serverName = $serverName;
 		$this->packetDumpingEnabled = $packetDumpingEnabled;
 
 		$this->loop = \React\EventLoop\Factory::create();
@@ -99,7 +101,7 @@ class MultiplayerServer extends EventEmitter {
 			// $this->broadcastPacket(new TimeUpdatePacket($this->World->getTime()));
 		});
 
-		$this->Logger->throwLog("Listening on address: " . $this->address . ":" . $port);
+		$this->Logger->throwLog($this->serverName . " is listening on address: " . $this->address . ":" . $port);
 		if ($this->packetDumpingEnabled) {
 			$this->Logger->throwWarning("Packet logging is enabled! This is useful only for developer debugging, and generates a lot of console output.");
 		}
@@ -150,7 +152,7 @@ class MultiplayerServer extends EventEmitter {
 
 		unset($this->Clients[$Client->uuid]);
 
-		$this->sendMessage($Client->username . " has disconnected from the server.");
+		$this->sendMessage($Client->username . " has disconnected from " . $this->serverName);
 	}
 
 	public function emitKeepAlive() {

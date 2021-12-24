@@ -67,8 +67,8 @@ class LoginHandler {
 			$client->updateChunks();
 
 			$server->Logger->throwLog("Added new client!");
-			$server->sendMessage($client->username . " has joined the server!");
-			$server->sendMessage("Welcome to PHPCraft, " . $client->username . "!");
+			$server->sendMessage($client->username . " has joined " . $server->serverName . "!");
+			$server->sendMessage("Welcome to " . $server->serverName . ", " . $client->username . "!");
 		} else {
 			// The client's version is not the same as this server implementation.
 			// So, we should disconnect that client with a 'Wrong Version' message.
