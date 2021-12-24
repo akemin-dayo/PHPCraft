@@ -37,6 +37,7 @@ class ChatHandler {
 				$Client->sendMessage("/rename <name>: Changes your name.");
 				$Client->sendMessage("/sethealth <0-20>: Sets your health value.");
 				$Client->sendMessage("/time [preset or numerical]: Shows or sets the world time.");
+				$Client->sendMessage("/stime [preset or numerical]: The same as /time, but smooth.");
 				$Client->sendMessage("/version: Shows information about the PHPCraft server.");
 				break;
 			case "/buffer":
@@ -150,6 +151,10 @@ class ChatHandler {
 				$Client->sendMessage("This server is running PHPCraft (MC: b1.7.3 / Beta Protocol 14)");
 				break;
 			case "/time":
+			case "/stime":
+			case "/smoothtime":
+			case "/times":
+			case "/timesmooth":
 				if ($args_count == 1) {
 					$Client->sendMessage("The current world time is " . $Server->World->getTime() . " ticks.");
 					break;
@@ -157,6 +162,7 @@ class ChatHandler {
 
 				$desiredTime = $args[1];
 
+				// Convert preset times to tick values
 				if (!is_numeric($desiredTime)) {
 					switch($desiredTime) {
 						case "day":
@@ -165,7 +171,7 @@ class ChatHandler {
 						case "morning":
 							$desiredTime = 1000;
 							break;
-						case "default":
+						case "default": // This is the default time used in PHPCraft (as defined in World.php)
 							$desiredTime = 4020;
 							break;
 						case "noon":
@@ -179,15 +185,44 @@ class ChatHandler {
 							break;
 						default:
 							$Client->sendMessage($desiredTime . " is not a valid time preset!");
-							$Client->sendMessage("Usage: /time [preset or numerical]");
 							$Client->sendMessage("Presets: day (0), morning (1000), default (4020), noon (6000), sunset (12000), night (14000)");
 							return;
 					}
 				}
 
-				$Server->World->setTime($desiredTime);
-				$Server->broadcastPacket(new TimeUpdatePacket($Server->World->getTime()));
-				$Client->sendMessage("The world time was set to " . $desiredTime . " ticks!");
+				$terminologyToUseForCompletionMessage = "set";
+				if ($args[0] == "/time") {
+					$Server->World->setTime($desiredTime);
+					$Server->broadcastPacket(new TimeUpdatePacket($Server->World->getTime()));
+				} else {
+					/*
+						/stime (and its aliases) works by incrementing the world time at 20000 uPS until the desired time is reached.
+						This is achieved without changing the server tickrate, which remains at 20 TPS at all times.
+
+						The result is a nice and smooth day transition effect, somewhat akin to "fast-forwarding" the world.
+						
+						/stime works best on modern Minecraft versions, as b1.7.3 makes the time transition take much longer.
+						(It seems like b1.7.3 is unable to keep up with the incoming TimeUpdatePackets…)
+					*/
+					$terminologyToUseForCompletionMessage = "smoothly set";
+					// Begin a fast, 20000 uPS loop to smoothly change the time
+					$hasTimeBeenReached = false;
+					$smoothTimeLoop = $Server->loop->addPeriodicTimer(1 / 20000, function () use ($Server, $desiredTime, &$hasTimeBeenReached) {
+						if (!$hasTimeBeenReached) {
+							$Server->World->updateTime();
+							$Server->broadcastPacket(new TimeUpdatePacket($Server->World->getTime()));
+							if ($Server->World->getTime() == $desiredTime) {
+								$hasTimeBeenReached = true;
+							}
+						}
+					});
+					// Destroy the loop after 10 seconds, which should be enough time to reach the target time.
+					$Server->loop->addTimer(10.0, function () use ($Server, $smoothTimeLoop) {
+						$Server->loop->cancelTimer($smoothTimeLoop);
+					});
+				}
+
+				$Client->sendMessage("The world time was " . $terminologyToUseForCompletionMessage . " to " . $desiredTime . " ticks!");
 				break;
 			case "/echo":
 				$constructedEchoMessage = "";
@@ -204,5 +239,5 @@ class ChatHandler {
 		}
 	}
 
-	// TODO (vy): Port commands into their own functions here
+	// TODO (Karen): Refactor and move all commands into their own functions (or even classes for more complex ones…?)
 }
