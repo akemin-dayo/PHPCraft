@@ -14,8 +14,7 @@ class DisconnectPacket {
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
 		$str = $StreamWrapper->writeByte(self::id) .
-		$StreamWrapper->writeShort(strlen($this->reason)) .
-		$StreamWrapper->writeString16WithoutStringLengthShort($this->reason);
+		$StreamWrapper->writeString16WithStringLengthPrefix($this->reason);
 
 		return $StreamWrapper->writePacket($str);
 	}

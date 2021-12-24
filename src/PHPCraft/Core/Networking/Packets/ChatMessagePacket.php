@@ -13,8 +13,7 @@ class ChatMessagePacket {
 
 	public function writePacket(StreamWrapper $StreamWrapper) {
 		$str = $StreamWrapper->writeByte(self::id) .
-		$StreamWrapper->writeShort(strlen($this->message)) .
-		$StreamWrapper->writeString16WithoutStringLengthShort($this->message);
+		$StreamWrapper->writeString16WithStringLengthPrefix($this->message);
 
 		return $StreamWrapper->writePacket($str);
 	}

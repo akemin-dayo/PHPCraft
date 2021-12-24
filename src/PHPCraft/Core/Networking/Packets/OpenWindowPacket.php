@@ -22,8 +22,7 @@ class OpenWindowPacket {
 		$str = $StreamWrapper->writeByte(self::id) .
 			$StreamWrapper->writeByte($this->windowId) .
 			$StreamWrapper->writeByte($this->inventoryType) .
-			$StreamWrapper->writeShort(strlen($this->windowTitle)) .
-			$StreamWrapper->writeString8WithoutStringLengthShort($this->windowTitle) .
+			$StreamWrapper->writeString8WithStringLengthPrefix($this->windowTitle) .
 			$StreamWrapper->writeByte($this->numberOfSlots);
 
 		return $StreamWrapper->writePacket($str);

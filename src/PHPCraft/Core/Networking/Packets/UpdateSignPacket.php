@@ -39,14 +39,10 @@ class UpdateSignPacket {
 			$StreamWrapper->writeInt($this->x) .
 			$StreamWrapper->writeShort($this->y) .
 			$StreamWrapper->writeInt($this->z) .
-			$StreamWrapper->writeShort($this->text1) .
-			$StreamWrapper->writeString16WithoutStringLengthShort($this->text1) .
-			$StreamWrapper->writeShort($this->text2) .
-			$StreamWrapper->writeString16WithoutStringLengthShort($this->text2) .
-			$StreamWrapper->writeShort($this->text3) .
-			$StreamWrapper->writeString16WithoutStringLengthShort($this->text3) .
-			$StreamWrapper->writeShort($this->text4) .
-			$StreamWrapper->writeString16WithoutStringLengthShort($this->text4);
+			$StreamWrapper->writeString16WithStringLengthPrefix($this->text1) .
+			$StreamWrapper->writeString16WithStringLengthPrefix($this->text2) .
+			$StreamWrapper->writeString16WithStringLengthPrefix($this->text3) .
+			$StreamWrapper->writeString16WithStringLengthPrefix($this->text4);
 
 		return $StreamWrapper->writePacket($str);
 	}

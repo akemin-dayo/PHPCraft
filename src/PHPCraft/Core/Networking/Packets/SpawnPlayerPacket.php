@@ -29,8 +29,7 @@ class SpawnPlayerPacket {
 	public function writePacket(StreamWrapper $StreamWrapper) {
 		$str = $StreamWrapper->writeByte(self::id) .
 		$StreamWrapper->writeInt($this->entityId) .
-		$StreamWrapper->writeShort(strlen($this->playerName)) .
-		$StreamWrapper->writeString16WithoutStringLengthShort($this->playerName) .
+		$StreamWrapper->writeString16WithStringLengthPrefix($this->playerName) .
 		$StreamWrapper->writeInt($this->x) .
 		$StreamWrapper->writeInt($this->y) .
 		$StreamWrapper->writeInt($this->z) .

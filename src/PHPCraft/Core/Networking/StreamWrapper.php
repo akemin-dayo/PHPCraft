@@ -208,9 +208,15 @@ class StreamWrapper {
 			// TODO (Karen): Add proper error handling for when the string somehow ends up empty.
 		}
 	}
-	public function writeString8WithoutStringLengthShort($str) {
+	public function writeString8WithoutStringLengthPrefix($inputString) {
 		// TODO (Karen): Actually implement UTF-8 to mUTF-8 string conversion here.
-		return $str;
+		return $inputString;
+	}
+	public function writeString8WithStringLengthPrefix($inputString) {
+		// TODO (Karen): Implement some form of string filtering to prevent crashing clients with disallowed characters.
+		$mUTF8String = $this->writeString8WithoutStringLengthPrefix($inputString);
+		$stringLength = strlen($inputString);
+		return $this->writeShort($stringLength) . $mUTF8String;
 	}
 	/* ******************************** */
 
@@ -233,9 +239,15 @@ class StreamWrapper {
 			// TODO (Karen): Add proper error handling for when the string somehow ends up empty.
 		}
 	}
-	public function writeString16WithoutStringLengthShort($str) {
-		$str = iconv("UTF-8", "UCS-2BE", $str);
-		return $str;
+	public function writeString16WithoutStringLengthPrefix($inputString) {
+		$convertedString = iconv("UTF-8", "UCS-2BE", $inputString);
+		return $convertedString;
+	}
+	public function writeString16WithStringLengthPrefix($inputString) {
+		// TODO (Karen): Implement some form of string filtering to prevent crashing clients with disallowed characters.
+		$ucs2beString = $this->writeString16WithoutStringLengthPrefix($inputString);
+		$stringLength = strlen($inputString);
+		return $this->writeShort($stringLength) . $ucs2beString;
 	}
 	/* ******************************** */
 }
