@@ -1,5 +1,8 @@
-.*.swp
+# Ignore PHPCraft logs
+/logs/
 
-vendor/
-.idea/
-logs/
+# Composer
+# https://github.com/github/gitignore/blob/main/Composer.gitignore
+# --------
+composer.phar
+/vendor/
