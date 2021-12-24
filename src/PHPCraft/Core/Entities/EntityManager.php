@@ -52,7 +52,7 @@ class EntityManager {
 			case "Position":
 				if ($playerEntity->Position->x >> 4 != $playerEntity->OldPosition->x >> 4 ||
 					$playerEntitiy->Position->z >> 4 != $playerEntity->OldPosition->z >> 4) {
-					$this->Server->loop->nextTick($client->updateChunks);
+					$this->Server->loop->futureTick($client->updateChunks);
 					$this->updateClientEntities($entity->client);
 				}
 				break;

@@ -44,8 +44,7 @@ class MultiplayerServer extends EventEmitter {
 		$this->serverName = $serverName;
 		$this->packetDumpingEnabled = $packetDumpingEnabled;
 
-		$this->loop = \React\EventLoop\Factory::create();
-		$this->socket = new Server($this->loop);
+		$this->loop = \React\EventLoop\Loop::get();
 
 		$this->PacketReader = new PacketReader();
 		$this->PacketReader->registerPackets();
@@ -62,12 +61,12 @@ class MultiplayerServer extends EventEmitter {
 	}
 
 	public function start($port) {
+		$this->socket = new Server($this->address . ":" . $port, $this->loop);
+
 		$this->socket->on('connection', function ($connection) {
 			$this->Logger->throwLog("New Connection");
 			$this->acceptClient($connection);
 		});
-
-		$this->socket->listen($port, $this->address);
 
 		$this->loop->addPeriodicTimer($this->tickRate, function () {
 			$this->EntityManager->update();
@@ -115,11 +114,11 @@ class MultiplayerServer extends EventEmitter {
 
 	public function handlePacket($client) {
 		$self = $this;
-		$this->loop->nextTick(function() use ($self, $client) {
+		$this->loop->futureTick(function() use ($self, $client) {
 			$packet = $self->PacketReader->readPacket($client);
 
 			if ($packet) {
-				$self->loop->nextTick(function() use ($self, $packet, $client) {
+				$self->loop->futureTick(function() use ($self, $packet, $client) {
 					$self->PacketHandler->handlePacket($packet, $client, $self);
 				});
 			}
@@ -129,7 +128,7 @@ class MultiplayerServer extends EventEmitter {
 	public function writePacket($packet, $client) {
 		$self = $this;
 
-		$this->loop->nextTick(function() use ($self, $packet, $client) {
+		$this->loop->futureTick(function() use ($self, $packet, $client) {
 			$self->PacketReader->writePacket($packet, $client);
 		});
 	}
