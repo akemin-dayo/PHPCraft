@@ -64,7 +64,7 @@ class MultiplayerServer extends EventEmitter {
 		$this->socket = new Server($this->address . ":" . $port, $this->loop);
 
 		$this->socket->on('connection', function ($connection) {
-			$this->Logger->throwLog("New Connection");
+			$this->Logger->throwLog("A new client is connecting!");
 			$this->acceptClient($connection);
 		});
 
