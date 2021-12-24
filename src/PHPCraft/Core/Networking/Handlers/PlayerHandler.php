@@ -87,7 +87,7 @@ class PlayerHandler {
 				return 0;
 		}
 
-		$Coordinates3D = new Coordinates3D($x, $y, $z);
+		$targetBlockCoordinates = new Coordinates3D($x, $y, $z);
 
 		/*
 			Simply using sprintf('0x%02X', $Packet->blockid) will not work correctly here.
@@ -107,7 +107,7 @@ class PlayerHandler {
 				5. Feed the result into sprintf('0x%02X') which gives us nice, clean output.
 		*/
 		$blockid_shortBinBlob = pack("s", $Packet->blockid);
-		$Server->Logger->logDebug($Client->username . " used block/item ID: " . $Packet->blockid . " (" . sprintf('0x%02X', hexdec(bin2hex((BIG_ENDIAN) ? $blockid_shortBinBlob : strrev($blockid_shortBinBlob)))) . ")");
+		$Server->Logger->logDebug($Client->username . " used block/item ID " . $Packet->blockid . " (" . sprintf('0x%02X', hexdec(bin2hex((BIG_ENDIAN) ? $blockid_shortBinBlob : strrev($blockid_shortBinBlob)))) . ") at " . $targetBlockCoordinates->toString());
 
 		// This check must be performed against the decimal representation of -1 instead of the 16-bit two's complement representation of 0xFFFF.
 		// The reason as to why is… described above in that massive comment block. ;P
@@ -115,8 +115,8 @@ class PlayerHandler {
 			return $Client->sendMessage("Interacting with blocks/items hasn't been implemented yet!");
 		}
 
-		if (!$Server->EntityManager->checkForBlockingEntities($Coordinates3D)) {
-			$Server->World->setBlockID($Coordinates3D, $Packet->blockid);
+		if (!$Server->EntityManager->checkForBlockingEntities($targetBlockCoordinates)) {
+			$Server->World->setBlockID($targetBlockCoordinates, $Packet->blockid);
 			$broadcastPacket = new BlockChangePacket($x, $y, $z, $Packet->blockid, 0x00);
 			$Server->broadcastPacket($broadcastPacket);
 		}

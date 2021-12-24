@@ -71,15 +71,11 @@ class ChatHandler {
 				$Client->enqueuePacket(new UpdateHealthPacket($targetHealth));
 				break;
 			case "/getpos":
-				$playerXPos = $Client->PlayerEntity->Position->x;
-				$playerYPos = $Client->PlayerEntity->Position->y;
-				$playerZPos = $Client->PlayerEntity->Position->z;
-
-				$playerCoordinates = new Coordinates3D($playerXPos, $playerYPos, $playerZPos);
+				$playerCoordinates = $Client->PlayerEntity->Position->toString();
 				$playerYaw = $Client->PlayerEntity->Position->yaw;
 				$playerPitch = $Client->PlayerEntity->Position->pitch;
 
-				$Client->sendMessage("Position: " . $playerCoordinates->toString());
+				$Client->sendMessage("Position: " . $playerCoordinates);
 				$Client->sendMessage("Yaw (Rotation, left-right): " . $playerYaw);
 				$Client->sendMessage("Pitch (Head angle, up-down): " . $playerPitch);
 				break;
