@@ -1,6 +1,9 @@
 {
 	"name": "akemin_dayo/phpcraft",
 	"description": "An open-source Minecraft server implementation, written in PHP.",
+	"type": "project",
+	"homepage": "https://github.com/akemin-dayo/PHPCraft",
+	"readme": "README.md",
 	"license": "MIT",
 	"authors": [
 		{
@@ -9,9 +12,15 @@
 		},
 		{
 			"name": "Karen/あけみ",
-			"email": "karen@akemi.ai"
+			"email": "karen@akemi.ai",
+            "homepage": "https://akemi.ai/",
+            "role": "Developer"
 		}
 	],
+	"support": {
+		"issues": "https://github.com/akemin-dayo/PHPCraft/issues",
+		"source": "https://github.com/akemin-dayo/PHPCraft"
+	},
 	"require": {
 		"monolog/monolog": "^2.3",
 		"react/socket": "^1.10",
