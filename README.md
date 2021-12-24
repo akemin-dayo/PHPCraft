@@ -38,7 +38,7 @@ More screenshots can be found in the [screenshots folder](screenshots/) that inc
 ## How do I run PHPCraft?
 
 ### Prerequisites
-* PHP 8.x (recommended) or 7.x
+* PHP 8.x (recommended) or PHP 7.4 to 7.2
 	* `brew install php` on macOS (requires [Homebrew](https://brew.sh/) to be installed)
 	* `sudo apt install php` on Debian-based Linux distributions
 	* [PHP for Windows](https://windows.php.net/download)

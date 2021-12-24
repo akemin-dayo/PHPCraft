@@ -113,7 +113,7 @@ class PacketReader {
 		}
 
 		if (is_null($type)) {
-			$client->Server->Logger->throwError("Unrecognised packet ID: " . $id . " (" . sprintf('0x%02X', $id) . ")");
+			$client->Server->Logger->logError("Unrecognised packet ID: " . $id . " (" . sprintf('0x%02X', $id) . ")");
 			return;
 		}
 

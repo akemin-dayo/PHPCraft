@@ -11,7 +11,7 @@ class DataHandler {
 	public static function HandleDisconnect($Packet, $Client, $Server) {
 		// If called, this means we've read a serverbound packet that a client has disconnected.
 
-		$Server->Logger->throwLog("Client has disconnected for reason: " . $Packet->reason);
+		$Server->Logger->logInfo("Client has disconnected with reason: " . $Packet->reason);
 
 		$Server->handleDisconnect($Client);
 	}

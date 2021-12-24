@@ -64,7 +64,7 @@ class MultiplayerServer extends EventEmitter {
 		$this->socket = new Server($this->address . ":" . $port, $this->loop);
 
 		$this->socket->on('connection', function ($connection) {
-			$this->Logger->throwLog("A new client is connecting!");
+			$this->Logger->logInfo("A new client is connecting!");
 			$this->acceptClient($connection);
 		});
 
@@ -100,9 +100,9 @@ class MultiplayerServer extends EventEmitter {
 			// $this->broadcastPacket(new TimeUpdatePacket($this->World->getTime()));
 		});
 
-		$this->Logger->throwLog($this->serverName . " is listening on address: " . $this->address . ":" . $port);
+		$this->Logger->logInfo($this->serverName . " is listening on address: " . $this->address . ":" . $port);
 		if ($this->packetDumpingEnabled) {
-			$this->Logger->throwWarning("Packet logging is enabled! This is useful only for developer debugging, and generates a lot of console output.");
+			$this->Logger->logWarning("Packet logging is enabled! This is useful only for developer debugging, and generates a lot of log output.");
 		}
 		$this->loop->run();
 	}
@@ -161,7 +161,7 @@ class MultiplayerServer extends EventEmitter {
 	}
 
 	public function sendMessage($message="") {
-		$this->Logger->throwLog($message);
+		$this->Logger->logInfo($message);
 
 		foreach ($this->Clients as $Client) {
 			$Client->enqueuePacket(new ChatMessagePacket(

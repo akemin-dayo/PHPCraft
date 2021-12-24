@@ -5,13 +5,13 @@
 namespace PHPCraft\Core\Helpers;
 
 class Hex {
-	public static function dump($data, $newline = "\n") {
+	public static function dumpNoEcho($data, $newline = "\n") {
 		static $from = '';
 		static $to = '';
 
-		static $width = 16; # number of bytes per line
+		static $width = 16; // number of bytes per line
 
-		static $pad = '.'; # padding for non-visible characters
+		static $pad = '.'; // padding for non-visible characters
 
 		if ($from === '') {
 			for ($i = 0; $i <= 0xFF; $i++) {
@@ -24,9 +24,15 @@ class Hex {
 		$chars = str_split(strtr($data, $from, $to), $width);
 
 		$offset = 0;
+		$finalHexdumpString = "";
 		foreach ($hex as $i => $line) {
-			echo sprintf('%6X', $offset) . ' : ' . implode(' ', str_split($line, 2)) . ' [' . $chars[$i] . ']' . $newline;
+			$finalHexdumpString = $finalHexdumpString . sprintf('%6X', $offset) . ' : ' . implode(' ', str_split($line, 2)) . ' [' . $chars[$i] . ']' . $newline;
 			$offset += $width;
 		}
+		return $finalHexdumpString;
+	}
+
+	public static function dump($data, $newline = "\n") {
+		echo(Hex::dumpNoEcho($data, $newline));
 	}
 }

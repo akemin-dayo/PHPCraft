@@ -25,12 +25,11 @@ class StreamWrapper {
 
 	public function data($data) {
 		if ($this->Server->packetDumpingEnabled) {
-			echo(Logger::COLOUR_CYANBOLD . "[READ PACKET FROM CLIENT - FILL BUFFER] " . Logger::COLOUR_RESET);
-			Hex::dump($data);
+			$this->Server->Logger->logPacket(Logger::COLOUR_CYANBOLD . "[READ PACKET FROM CLIENT - FILL BUFFER] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($data));
 		}
 
 		if (is_null($data)) {
-			$this->Server->Logger->throwWarning("StreamWrapper somehow received null data! This should never happen.");
+			$this->Server->Logger->logWarning("StreamWrapper somehow received null data! This should never happen.");
 			return;
 		}
 
@@ -45,16 +44,14 @@ class StreamWrapper {
 		}
 
 		if ($this->Server->packetDumpingEnabled) {
-			echo(Logger::COLOUR_YELLOWBOLD . "[READ PACKET FROM CLIENT - READ FROM BUFFER] " . Logger::COLOUR_RESET);
-			Hex::dump($s);
+			$this->Server->Logger->logPacket(Logger::COLOUR_YELLOWBOLD . "[READ PACKET FROM CLIENT - READ FROM BUFFER] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($s));
 		}
 		return $s;
 	}
 
 	public function writePacket($data) {
 		if ($this->Server->packetDumpingEnabled) {
-			echo(Logger::COLOUR_GREENBOLD . "[WRITE PACKET TO CLIENT] " . Logger::COLOUR_RESET);
-			Hex::dump($data);
+			$this->Server->Logger->logPacket(Logger::COLOUR_GREENBOLD . "[WRITE PACKET TO CLIENT] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($data));
 		}
 
 		$res = $this->stream->write($data);

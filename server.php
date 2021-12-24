@@ -19,7 +19,7 @@ $server_port = 25565;
 // The name of the server, which shows up in places like the join/welcome/quit messages.
 $server_name = "PHPCraft";
 
-// If set to true, enables packet dumping. This is useful only for developer debugging, and generates a lot of console output.
+// If set to true, enables packet dumping. This is useful only for developer debugging, and generates a lot of log output.
 $enable_packet_dumping = false;
 
 /* ********************** */

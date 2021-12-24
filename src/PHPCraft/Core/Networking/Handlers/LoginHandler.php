@@ -66,13 +66,13 @@ class LoginHandler {
 			// Begin sending chunk data.
 			$client->updateChunks();
 
-			$server->Logger->throwLog("Added a new client!");
+			$server->Logger->logInfo("Added a new client!");
 			$server->sendMessage($client->username . " has joined " . $server->serverName . "!");
 			$server->sendMessage("Welcome to " . $server->serverName . ", " . $client->username . "!");
 		} else {
 			// The client's version is not the same as this server implementation.
 			// So, we should disconnect that client with a 'Wrong Version' message.
-			$server->Logger->throwError("Wrong client version! A client attempted to connect using Beta/pre-Netty protocol version " . $packet->protocolVersion . "!");
+			$server->Logger->logError("Wrong client version! A client attempted to connect using Beta/pre-Netty protocol version " . $packet->protocolVersion . "!");
 			$server->handleDisconnect($client, true, "Wrong client version (" . $packet->protocolVersion . ")! This server supports Minecraft Beta b1.7.3 (Beta Protocol 14).");
 		}
 	}

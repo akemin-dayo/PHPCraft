@@ -108,7 +108,7 @@ class PlayerHandler {
 					5. Feed the result into sprintf('0x%02X') which gives us nice, clean output.
 			*/
 			$blockid_shortBinBlob = pack("s", $Packet->blockid);
-			$Server->Logger->throwLog($Client->username . " used block/item ID: " . $Packet->blockid . " (" . sprintf('0x%02X', hexdec(bin2hex((BIG_ENDIAN) ? $blockid_shortBinBlob : strrev($blockid_shortBinBlob)))) . ")");
+			$Server->Logger->logDebug($Client->username . " used block/item ID: " . $Packet->blockid . " (" . sprintf('0x%02X', hexdec(bin2hex((BIG_ENDIAN) ? $blockid_shortBinBlob : strrev($blockid_shortBinBlob)))) . ")");
 		}
 
 		// This check must be performed against the decimal representation of -1 instead of the 16-bit two's complement representation of 0xFFFF.
