@@ -15,7 +15,7 @@ PHPCraft is a fork of [Andrew Vy](https://github.com/andrewvy)'s [HHVMCraft](htt
 
 ## Which Minecraft versions are supported?
 
-PHPCraft currently targets and supports Minecraft Beta b1.7.3 ([Beta Protocol 14](https://wiki.vg/Protocol_version_numbers#Beta)), but you can connect to it with modern Minecraft versions (like 1.17.1!) using [DirtMultiVersion](https://github.com/DirtPowered/DirtMultiversion).
+PHPCraft currently targets and supports Minecraft Beta b1.7.3 ([Beta/pre-Netty Protocol 14](https://wiki.vg/Protocol_version_numbers#Beta)), but you can connect to it with modern Minecraft versions (like 1.17.1!) using [DirtMultiVersion](https://github.com/DirtPowered/DirtMultiversion).
 
 (I _would_ like to target/support a more modern Minecraft version at some point, but that would pretty much mean rewriting just about _all_ of the code from scratch and would be a _lot_ of work for what is again, just a project I'm doing for fun because I found it interesting.)
 
@@ -61,8 +61,8 @@ You can configure both the server port (`25565` by default) and the IP address t
 ---
 
 ## Useful developer resources
-* [Protocol specification for Minecraft Beta b1.7.3 (Beta Protocol 14) on wiki.vg (oldid 510)](https://wiki.vg/index.php?title=Protocol&oldid=510)
-	* This is the last page revision pertaining to Beta Protocol 14, made on 2011/08/14.
+* [Protocol specification for Minecraft Beta b1.7.3 (Beta/pre-Netty Protocol 14) on wiki.vg (oldid 510)](https://wiki.vg/index.php?title=Protocol&oldid=510)
+	* This is the last page revision pertaining to Beta/pre-Netty Protocol 14, made on 2011/08/14.
 
 ---
 
