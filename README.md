@@ -53,10 +53,10 @@ More screenshots can be found in the [screenshots folder](screenshots/) that inc
 git clone https://github.com/akemin-dayo/PHPCraft.git
 cd PHPCraft
 composer install
-php server.php
+php start.php # ./start.php also works
 ```
 
-You can configure both the server port (`25565` by default) and the IP address to bind to (`0.0.0.0` by default) in `server.php`!
+You can configure both the server port (`25565` by default) and the IP address to bind to (`0.0.0.0` by default) in `start.php`!
 
 ---
 
