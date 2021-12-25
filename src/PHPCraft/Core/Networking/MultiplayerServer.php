@@ -17,7 +17,6 @@ use PHPCraft\Core\Helpers\Logger;
 use PHPCraft\Core\Networking\Handlers;
 use PHPCraft\Core\Networking\PackerReader;
 use PHPCraft\Core\Networking\Packets\ChatMessagePacket;
-use PHPCraft\Core\Networking\Packets\KeepAlivePacket;
 use PHPCraft\Core\Networking\Packets\TimeUpdatePacket;
 use PHPCraft\Core\World\World;
 use React\Socket\Server;
@@ -25,7 +24,6 @@ use React\Socket\Server;
 class MultiplayerServer extends EventEmitter {
 	public $address;
 	public $serverName;
-	public $shouldPreventClientTimeDrift;
 	public $packetDumpingEnabled;
 
 	public $Clients = [];
@@ -40,10 +38,9 @@ class MultiplayerServer extends EventEmitter {
 
 	public $tickRate = 1 / 20; // 20 ticks per second (TPS)
 
-	public function __construct($address, $serverName, $shouldPreventClientTimeDrift, $packetDumpingEnabled) {
+	public function __construct($address, $serverName, $packetDumpingEnabled) {
 		$this->address = $address;
 		$this->serverName = $serverName;
-		$this->shouldPreventClientTimeDrift = $shouldPreventClientTimeDrift;
 		$this->packetDumpingEnabled = $packetDumpingEnabled;
 
 		$this->loop = \React\EventLoop\Loop::get();
@@ -73,35 +70,6 @@ class MultiplayerServer extends EventEmitter {
 		$this->loop->addPeriodicTimer($this->tickRate, function () {
 			$this->EntityManager->update();
 			$this->World->updateTime();
-
-			/*
-				b1.7.3 clients will crash with an NPE if a TimeUpdatePacket is received before the client joins the world.
-				This means that if a TimeUpdatePacket is broadcasted on every tick, b1.7.3 will be completely unable to join the server.
-
-				Broadcasting a TimeUpdatePacket once every second significantly decreases the chances of a b1.7.3 client crashing.
-				That should probably…? be good enough to prevent client-side time drift (or at least prevent it from getting too bad).
-
-				PHPCraft doesn't have any fancy features like TPS adjustment that would make this an issue (yet), anyway.
-				(Some servers let you set the TPS higher than 20, so time goes by faster.)
-
-				That being said… b1.7.3 clients can still crash if they just so happen to join while the packet is being broadcasted.
-				As a result, I'm disabling the TimeUpdatePacket broadcast by default for now until I can figure out how to properly fix that.
-
-				Having the broadcast be disabled /does/ cause clients to drift away from server time though, as expected. Pain.
-
-				(Basically need to come up with some mechanism to broadcast TimeUpdatePackets only to clients that have fully joined the world…)
-			*/
-
-			// $this->broadcastPacket(new TimeUpdatePacket($this->World->getTime()));
-		});
-
-		$this->loop->addPeriodicTimer(1, function () {
-			$this->emitKeepAlive();
-			// Broadcast a TimeUpdatePacket every second to correct any client-side time drift.
-			// Disabled by default, see above for more information as to why.
-			if ($this->shouldPreventClientTimeDrift) {
-				$this->broadcastPacket(new TimeUpdatePacket($this->World->getTime()));
-			}
 		});
 
 		$this->Logger->logInfo($this->serverName . " is listening on address: " . $this->address . ":" . $port);
@@ -145,23 +113,39 @@ class MultiplayerServer extends EventEmitter {
 
 	public function handleDisconnect($Client, $ServerOriginated = false, $reason="") {
 		if ($ServerOriginated) {
+			$this->Logger->logInfo("Disconnecting " . $Client->username . " from " . $this->serverName . "…" . ((mb_strlen($reason) > 0) ? " (" . $reason . ")" : ""));
 			$Client->disconnectWithReason($reason);
 		} else {
+			// We already handle the logging for this in DataHandler (upon 0xFF disconnect packet)
 			$Client->disconnect();
 		}
 
 		$Client->connection->handleClose();
 		$Client->connection->close();
 
+		/* Cleaning up after client disconnection */
+		// Cancel all async timer loops
+		$this->loop->cancelTimer($Client->sendClientBoundKeepAliveTimer);
+		$this->loop->cancelTimer($Client->isClientStillAliveTimer);
+		if (!is_null($Client->sendTimeUpdatePacketToPreventTimeDriftTimer)) {
+			// sendTimeUpdatePacketToPreventTimeDriftTimer requires an additional is_null check.
+			// This is because it is only initialised after the client sends a LoginRequestPacket (0x01) in response to a HandshakeResponsePacket (0x02).
+			$this->loop->cancelTimer($Client->sendTimeUpdatePacketToPreventTimeDriftTimer);
+		} else {
+			$this->Logger->logDebug($Client->username . "'s client never sent a LoginRequestPacket (0x01) in response to our HandshakeResponsePacket (0x02), so sendTimeUpdatePacketToPreventTimeDriftTimer was never initialised (and therefore does not need to be cancelled and destroyed).");
+		}
+
+		// We must unset() all the timers before attempting to unset() the Client object.
+		// Otherwise, the Client object will not be destroyed.
+		unset($Client->sendClientBoundKeepAliveTimer);
+		unset($Client->isClientStillAliveTimer);
+		unset($Client->sendTimeUpdatePacketToPreventTimeDriftTimer);
+
+		// Finally destroy the Client object.
 		unset($this->Clients[$Client->uuid]);
+		/* ************************************** */
 
 		$this->sendMessage($Client->username . " has disconnected from " . $this->serverName);
-	}
-
-	public function emitKeepAlive() {
-		foreach ($this->Clients as $Client) {
-			$Client->enqueuePacket(new KeepAlivePacket());
-		}
 	}
 
 	public function sendMessage($message="") {

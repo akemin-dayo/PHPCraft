@@ -9,6 +9,7 @@ use PHPCraft\Core\Networking\Packets\ChatMessagePacket;
 use PHPCraft\Core\Networking\Packets\ChunkDataPacket;
 use PHPCraft\Core\Networking\Packets\ChunkPreamblePacket;
 use PHPCraft\Core\Networking\Packets\DisconnectPacket;
+use PHPCraft\Core\Networking\Packets\KeepAlivePacket;
 use PHPCraft\Core\Windows\InventoryWindow;
 
 class Client {
@@ -33,6 +34,13 @@ class Client {
 
 	public $pktCount = 0;
 
+	public $sendClientBoundKeepAliveTimer;
+
+	public $isClientStillAliveTimer;
+	public $ticksSinceLastKeepAlive = 0;
+
+	public $sendTimeUpdatePacketToPreventTimeDriftTimer;
+
 	public function __construct($connection, $server) {
 		$this->uuid = uniqid("client");
 		$this->connection = $connection;
@@ -43,7 +51,34 @@ class Client {
 		$this->setItem(0x01, 0x40, 0x00, 3, 0);
 		$this->setupPacketListener();
 		$this->pktCount = 0;
+
+		$this->sendClientBoundKeepAliveTimer = $server->loop->addPeriodicTimer(2, function () {
+			// Send a new KeepAlivePacket every 2 seconds, which should be more than often enough
+			// $this->enqueuePacket(new KeepAlivePacket());
+		});
+
+		$this->isClientStillAliveTimer = $server->loop->addPeriodicTimer(1 / 20, function () {
+			// Increment $ticksSinceLastKeepAlive at a fixed 20 TPS rate, independent of the server tickrate
+			// PHPCraft doesn't have any fancy features like TPS adjustment (yet…?) that would make this an issue, but… I just think it's good practice to do it this way regardless.
+			// This means that the server tickrate (used for game logic / time progression) won't affect how quickly (or slowly) it takes for a client to time out.
+			$this->ticksSinceLastKeepAlive++;
+			if ($this->ticksSinceLastKeepAlive == 600) {
+				// If the client has not sent a KeepAlivePacket (0x00) in the last 30 seconds (600 ticks), assume it has timed out
+
+				// ※ NOTE: Disconnecting upon time out is temporarily disabled for reasons explained in DataHandler HandleKeepAlive().
+				// $this->Server->handleDisconnect($this, true, "Keep-alive timeout: 30 seconds (600 ticks)");
+			}
+		});
+
+		// b1.7.3 clients will crash with an NPE if a TimeUpdatePacket is received before the client sends a LoginRequestPacket (0x01).
+		// As a result, the initialisation for sendTimeUpdatePacketToPreventTimeDriftTimer actually occurs in LoginHandler and not during Client instantiation.
+		// This /does/ mean that cancelling and destroying sendTimeUpdatePacketToPreventTimeDriftTimer involves an is_null() check now, though (which is implemented in MultiplayerServer).
 	}
+
+	public function __destruct() {
+		// TODO (Karen): Add an option to turn on and off verbose logging, then we can /really/ go full stupid with the verbose debug logs.
+		$this->Server->Logger->logDebug("Destroying Client object for " . $this->username . "…");
+    }
 
 	public function setupPacketListener() {
 		$this->connection->on('data', function ($data) {

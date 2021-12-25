@@ -46,16 +46,16 @@ class PacketReader {
 		$this->registerPacketType('Packets\SpawnPlayerPacket', false, true);
 		$this->registerPacketType('Packets\PickupSpawnPacket', false, true);
 		$this->registerPacketType('Packets\CollectItemPacket', false, true);
-//		$this->registerPacketType(Packets\SpawnGenericEntityPacket, false, true);
-//		$this->registerPacketType(Packets\SpawnMobPacket, false, true);
-//		$this->registerPacketType(Packets\SpawnPaintingPacket, false, true);
+		// $this->registerPacketType(Packets\SpawnGenericEntityPacket, false, true);
+		// $this->registerPacketType(Packets\SpawnMobPacket, false, true);
+		// $this->registerPacketType(Packets\SpawnPaintingPacket, false, true);
 
 		$this->registerPacketType('Packets\EntityVelocityPacket', false, true);
-//		$this->registerPacketType(Packets\DestroyEntityPacket, false, true);
-//		$this->registerPacketType(Packets\UselessEntityPacket, false, true);
+		// $this->registerPacketType(Packets\DestroyEntityPacket, false, true);
+		// $this->registerPacketType(Packets\UselessEntityPacket, false, true);
 		$this->registerPacketType('Packets\EntityRelativeMovePacket', false, true);
-//		$this->registerPacketType(Packets\EntityLookPacket, false, true);
-//		$this->registerPacketType(Packets\EntityLookAndRelativeMovePacket, false, true);
+		// $this->registerPacketType(Packets\EntityLookPacket, false, true);
+		// $this->registerPacketType(Packets\EntityLookAndRelativeMovePacket, false, true);
 		$this->registerPacketType('Packets\EntityTeleportPacket', false, true);
 
 		$this->registerPacketType('Packets\EntityStatusPacket', false, true);
@@ -64,28 +64,28 @@ class PacketReader {
 
 		$this->registerPacketType('Packets\ChunkPreamblePacket', false, true);
 		$this->registerPacketType('Packets\ChunkDataPacket', false, true);
-//		$this->registerPacketType(Packets\BulkBlockChangePacket, false, true);
+		// $this->registerPacketType(Packets\BulkBlockChangePacket, false, true);
 		$this->registerPacketType('Packets\BlockChangePacket', false, true);
-//		$this->registerPacketType(Packets\BlockActionPacket, false, true);
+		// $this->registerPacketType(Packets\BlockActionPacket, false, true);
 
-//		$this->registerPacketType(Packets\ExplosionPacket, false, true);
+		// $this->registerPacketType(Packets\ExplosionPacket, false, true);
 		$this->registerPacketType('Packets\SoundEffectPacket', false, true);
 
-//		$this->registerPacketType(Packets\EnvironmentStatePacket, false, true);
-//		$this->registerPacketType(Packets\LightningPacket, false, true);
+		// $this->registerPacketType(Packets\EnvironmentStatePacket, false, true);
+		// $this->registerPacketType(Packets\LightningPacket, false, true);
 
 		$this->registerPacketType('Packets\OpenWindowPacket', false, true);
 		$this->registerPacketType('Packets\CloseWindowPacket');
-//		$this->registerPacketType(Packets\ClickWindowPacket, true, false);
+		// $this->registerPacketType(Packets\ClickWindowPacket, true, false);
 		$this->registerPacketType('Packets\SetSlotPacket', false, true);
 		$this->registerPacketType('Packets\WindowItemsPacket', false, true);
 		$this->registerPacketType('Packets\UpdateProgressBarPacket', false, true);
-//		$this->registerPacketType(Packets\TransactionStatusPacket);
+		// $this->registerPacketType(Packets\TransactionStatusPacket);
 
 		$this->registerPacketType('Packets\UpdateSignPacket');
-//		$this->registerPacketType(Packets\MapDataPacket, false, true);
+		// $this->registerPacketType(Packets\MapDataPacket, false, true);
 
-//		$this->registerPacketType(Packets\UpdateStatisticPacket, false, true);
+		// $this->registerPacketType(Packets\UpdateStatisticPacket, false, true);
 
 		$this->registerPacketType('Packets\DisconnectPacket');
 
@@ -130,7 +130,9 @@ class PacketReader {
 	}
 
 	public function writePacket($packet, $client) {
-		if ($packet->writePacket($client->streamWrapper) == false) {
+		// TODO (Karen): Figure out a better way to do this that doesn't cause PHPCraft to go absolutely insane with retrying failed packet writes as fast as it can.
+		// Removing the retry functionality entirely isn't a good solution either, because that would cause clients that momentarily lose connection to miss world/block updates (which is bad for obvious reasons).
+		if (!($packet->writePacket($client->streamWrapper))) {
 			$client->enqueuePacket($packet);
 		}
 	}

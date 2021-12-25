@@ -202,19 +202,12 @@ class ChatHandler {
 					*/
 					$terminologyToUseForCompletionMessage = "smoothly set";
 					// Begin a fast, 20000 uPS loop to smoothly change the time
-					$hasTimeBeenReached = false;
-					$smoothTimeLoop = $Server->loop->addPeriodicTimer(1 / 20000, function () use ($Server, $desiredTime, &$hasTimeBeenReached) {
-						if (!$hasTimeBeenReached) {
-							$Server->World->updateTime();
-							$Server->broadcastPacket(new TimeUpdatePacket($Server->World->getTime()));
-							if ($Server->World->getTime() == $desiredTime) {
-								$hasTimeBeenReached = true;
-							}
+					$Server->loop->addPeriodicTimer(1 / 20000, function (\React\EventLoop\Timer\Timer $smoothTimeLoop) use ($Server, $desiredTime, &$hasTimeBeenReached) {
+						$Server->World->updateTime();
+						$Server->broadcastPacket(new TimeUpdatePacket($Server->World->getTime()));
+						if ($Server->World->getTime() == $desiredTime) {
+							$Server->loop->cancelTimer($smoothTimeLoop);
 						}
-					});
-					// Destroy the loop after 10 seconds, which should be enough time to reach the target time.
-					$Server->loop->addTimer(10.0, function () use ($Server, $smoothTimeLoop) {
-						$Server->loop->cancelTimer($smoothTimeLoop);
 					});
 				}
 

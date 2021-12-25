@@ -25,7 +25,7 @@ class StreamWrapper {
 
 	public function data($data) {
 		if ($this->Server->packetDumpingEnabled) {
-			$this->Server->Logger->logPacket(Logger::COLOUR_CYANBOLD . "[READ PACKET FROM CLIENT - FILL BUFFER] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($data));
+			$this->Server->Logger->logPacket(Logger::COLOUR_CYANBOLD . "[RECEIVED PACKET FROM CLIENT - FILL BUFFER] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($data));
 		}
 
 		if (is_null($data)) {
@@ -44,22 +44,21 @@ class StreamWrapper {
 		}
 
 		if ($this->Server->packetDumpingEnabled) {
-			$this->Server->Logger->logPacket(Logger::COLOUR_YELLOWBOLD . "[READ PACKET FROM CLIENT - READ FROM BUFFER] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($s));
+			$this->Server->Logger->logPacket(Logger::COLOUR_YELLOWBOLD . "[READ PACKET FROM CLIENT - FROM BUFFER] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($s));
 		}
 		return $s;
 	}
 
 	public function writePacket($data) {
-		if ($this->Server->packetDumpingEnabled) {
-			$this->Server->Logger->logPacket(Logger::COLOUR_GREENBOLD . "[WRITE PACKET TO CLIENT] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($data));
-		}
+		$didWritePacketSuccessfully = $this->stream->write($data);
 
-		$res = $this->stream->write($data);
-		if ($res != false) {
-			return true;
-		} else {
-			return false;
+		if ($this->Server->packetDumpingEnabled && $didWritePacketSuccessfully) {
+			$this->Server->Logger->logPacket(Logger::COLOUR_GREENBOLD . "[WRITE PACKET TO CLIENT] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($data));
+		} else if ($this->Server->packetDumpingEnabled && !$didWritePacketSuccessfully) {
+			$this->Server->Logger->logPacket(Logger::COLOUR_REDBOLD . "[FAILED TO WRITE PACKET TO CLIENT] " . Logger::COLOUR_RESET . Hex::dumpNoEcho($data));
 		}
+		
+		return $didWritePacketSuccessfully;
 	}
 
 	public function close() {
