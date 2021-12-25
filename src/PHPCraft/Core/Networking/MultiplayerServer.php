@@ -25,6 +25,7 @@ use React\Socket\Server;
 class MultiplayerServer extends EventEmitter {
 	public $address;
 	public $serverName;
+	public $shouldPreventClientTimeDrift;
 	public $packetDumpingEnabled;
 
 	public $Clients = [];
@@ -39,9 +40,10 @@ class MultiplayerServer extends EventEmitter {
 
 	public $tickRate = 1 / 20; // 20 ticks per second (TPS)
 
-	public function __construct($address, $serverName, $packetDumpingEnabled) {
+	public function __construct($address, $serverName, $shouldPreventClientTimeDrift, $packetDumpingEnabled) {
 		$this->address = $address;
 		$this->serverName = $serverName;
+		$this->shouldPreventClientTimeDrift = $shouldPreventClientTimeDrift;
 		$this->packetDumpingEnabled = $packetDumpingEnabled;
 
 		$this->loop = \React\EventLoop\Loop::get();
@@ -77,15 +79,15 @@ class MultiplayerServer extends EventEmitter {
 				This means that if a TimeUpdatePacket is broadcasted on every tick, b1.7.3 will be completely unable to join the server.
 
 				Broadcasting a TimeUpdatePacket once every second significantly decreases the chances of a b1.7.3 client crashing.
-				That should be good enough to at least prevent client-side time drift.
+				That should probably…? be good enough to prevent client-side time drift (or at least prevent it from getting too bad).
 
 				PHPCraft doesn't have any fancy features like TPS adjustment that would make this an issue (yet), anyway.
 				(Some servers let you set the TPS higher than 20, so time goes by faster.)
 
 				That being said… b1.7.3 clients can still crash if they just so happen to join while the packet is being broadcasted.
-				As a result, I'm disabling the TimeUpdatePacket broadcast entirely for now until I can figure out how to properly fix that.
+				As a result, I'm disabling the TimeUpdatePacket broadcast by default for now until I can figure out how to properly fix that.
 
-				Hopefully client-side time drift won't be too bad…?
+				Having the broadcast be disabled /does/ cause clients to drift away from server time though, as expected. Pain.
 
 				(Basically need to come up with some mechanism to broadcast TimeUpdatePackets only to clients that have fully joined the world…)
 			*/
@@ -96,8 +98,10 @@ class MultiplayerServer extends EventEmitter {
 		$this->loop->addPeriodicTimer(1, function () {
 			$this->emitKeepAlive();
 			// Broadcast a TimeUpdatePacket every second to correct any client-side time drift.
-			// See above for more information.
-			// $this->broadcastPacket(new TimeUpdatePacket($this->World->getTime()));
+			// Disabled by default, see above for more information as to why.
+			if ($this->shouldPreventClientTimeDrift) {
+				$this->broadcastPacket(new TimeUpdatePacket($this->World->getTime()));
+			}
 		});
 
 		$this->Logger->logInfo($this->serverName . " is listening on address: " . $this->address . ":" . $port);
