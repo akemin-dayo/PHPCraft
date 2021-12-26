@@ -19,7 +19,11 @@ $server_port = 25565;
 // The name of the server, which shows up in places like the join/welcome/quit messages.
 $server_name = "PHPCraft";
 
-// If set to true, enables packet dumping. This is useful only for developer debugging, and generates a lot of log output.
+// If set to true, enables verbose debug logging.
+// Enabled by default because… well, I think the only people that will be using PHPCraft are developers (if not only myself) ;P
+$enable_debug_logging = true;
+
+// If set to true, enables packet dumping. This generates a lot of log output!
 $enable_packet_dumping = false;
 
 /* ********************** */
@@ -27,6 +31,7 @@ $enable_packet_dumping = false;
 $server = new MultiplayerServer(
 	$server_bind_ip,
 	$server_name,
+	$enable_debug_logging,
 	$enable_packet_dumping
 );
 $server->start($server_port);

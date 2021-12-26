@@ -38,7 +38,7 @@ class MultiplayerServer extends EventEmitter {
 
 	public $tickRate = 1 / 20; // 20 ticks per second (TPS)
 
-	public function __construct($address, $serverName, $packetDumpingEnabled) {
+	public function __construct($address, $serverName, $debugLoggingEnabled, $packetDumpingEnabled) {
 		$this->address = $address;
 		$this->serverName = $serverName;
 		$this->packetDumpingEnabled = $packetDumpingEnabled;
@@ -56,7 +56,7 @@ class MultiplayerServer extends EventEmitter {
 
 		$this->EntityManager = new EntityManager($this, $this->World);
 
-		$this->Logger = new Logger();
+		$this->Logger = new Logger($debugLoggingEnabled);
 	}
 
 	public function start($port) {
@@ -67,6 +67,18 @@ class MultiplayerServer extends EventEmitter {
 			$this->acceptClient($connection);
 		});
 
+		$this->socket->on('end', function () {
+			$this->Logger->logDebug("Stream ended!");
+		});
+
+		$this->socket->on('close', function () {
+			$this->Logger->logDebug("Stream closed!");
+		});
+
+		$this->socket->on('error', function (Exception $error) {
+			$this->Logger->logDebug("An error occurred while processing the stream! Exception details: " . $error->getMessage());
+		});
+
 		$this->loop->addPeriodicTimer($this->tickRate, function () {
 			$this->EntityManager->update();
 			$this->World->updateTime();
@@ -74,7 +86,7 @@ class MultiplayerServer extends EventEmitter {
 
 		$this->Logger->logInfo($this->serverName . " is listening on address: " . $this->address . ":" . $port);
 		if ($this->packetDumpingEnabled) {
-			$this->Logger->logWarning("Packet logging is enabled! This is useful only for developer debugging, and generates a lot of log output.");
+			$this->Logger->logWarning("Packet logging is enabled! This generates a lot of log output!");
 		}
 		$this->loop->run();
 	}
@@ -140,12 +152,16 @@ class MultiplayerServer extends EventEmitter {
 		unset($Client->sendClientBoundKeepAliveTimer);
 		unset($Client->isClientStillAliveTimer);
 		unset($Client->sendTimeUpdatePacketToPreventTimeDriftTimer);
+		/* ************************************** */
+
+		if ($ServerOriginated) {
+			$this->sendMessage($Client->username . " was disconnected from " . $this->serverName . ((mb_strlen($reason) > 0) ? " (" . $reason . ")" : ""));
+		} else {
+			$this->sendMessage($Client->username . " has disconnected from " . $this->serverName);
+		}
 
 		// Finally destroy the Client object.
 		unset($this->Clients[$Client->uuid]);
-		/* ************************************** */
-
-		$this->sendMessage($Client->username . " has disconnected from " . $this->serverName);
 	}
 
 	public function sendMessage($message="") {

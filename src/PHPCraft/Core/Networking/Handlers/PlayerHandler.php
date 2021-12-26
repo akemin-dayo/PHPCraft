@@ -17,13 +17,14 @@ class PlayerHandler {
 	public static function HandleGrounded($Packet, $Client, $Server) {
 		// When we receive a 0x0A PlayerGroundedPacket, reset ticksSinceLastKeepAlive to 0 for the client that sent it
 
-		// It seems that the wiki.vg specification is somewhat incorrect and that actual b1.7.3 clients don't actaually send keep-alive packets (0x00) at all.
+		// It seems that the wiki.vg specification is somewhat incorrect and that actual b1.7.3 clients don't actually send keep-alive packets (0x00) at all.
 		// … At least, I wasn't able to find any when I used Wireshark to dump the packet traffic from one.
 
 		// As a result, this functionality is handled here specifically for b1.7.3 clients.
 
 		// For what it's worth, PHPCraft also handles 0x00 keep-alive packets, but in DataHandler HandleKeepAlive().
 		// DirtMultiVersion and any other unofficial clients written using the wiki.vg spec as a reference /do/ send the 0x00 keep-alive packets, so…
+		// $Server->Logger->logDebug("Received a PlayerGroundedPacket from " . $Client->username . "'s client!");
 		$Client->ticksSinceLastKeepAlive = 0;
 	}
 
@@ -32,11 +33,16 @@ class PlayerHandler {
 		$client->PlayerEntity->Position->x = $packet->x;
 		$client->PlayerEntity->Position->y = $packet->y;
 		$client->PlayerEntity->Position->z = $packet->z;
+		// If we receive a PlayerPositionPacket, the client is quite obviously still alive.
+		// Because of COURSE b1.7.3 clients stop sending PlayerGroundedPackets when they're jumping. Pain.
+		$client->ticksSinceLastKeepAlive = 0;
 	}
 
 	public static function HandleLook($Packet, $Client, $Server) {
 		$Client->PlayerEntity->Position->pitch = $Packet->pitch;
 		$Client->PlayerEntity->Position->yaw = $Packet->yaw;
+		// Same thing as above but for PlayerLookPacket.
+		$Client->ticksSinceLastKeepAlive = 0;
 	}
 
 	public static function HandlePositionAndLook($Packet, $Client, $Server) {
@@ -45,6 +51,8 @@ class PlayerHandler {
 		$Client->PlayerEntity->Position->z = $Packet->z;
 		$Client->PlayerEntity->Position->pitch = $Packet->pitch;
 		$Client->PlayerEntity->Position->yaw = $Packet->yaw;
+		// It's PlayerPositionAndLookPacket this time. You get the point.
+		$Client->ticksSinceLastKeepAlive = 0;
 	}
 
 	public static function HandleRespawn($Packet, $Client, $Server) {
@@ -117,7 +125,7 @@ class PlayerHandler {
 				5. Feed the result into sprintf('0x%02X') which gives us nice, clean output.
 		*/
 		$blockid_shortBinBlob = pack("s", $Packet->blockid);
-		$Server->Logger->logDebug($Client->username . " used block/item ID " . $Packet->blockid . " (" . sprintf('0x%02X', hexdec(bin2hex((BIG_ENDIAN) ? $blockid_shortBinBlob : strrev($blockid_shortBinBlob)))) . ") at " . $targetBlockCoordinates->toString());
+		$Server->Logger->logDebug($Client->username . " placed or used block/item ID " . $Packet->blockid . " (" . sprintf('0x%02X', hexdec(bin2hex((BIG_ENDIAN) ? $blockid_shortBinBlob : strrev($blockid_shortBinBlob)))) . ") at " . $targetBlockCoordinates->toString());
 
 		// This check must be performed against the decimal representation of -1 instead of the 16-bit two's complement representation of 0xFFFF.
 		// The reason as to why is… described above in that massive comment block. ;P
@@ -162,6 +170,8 @@ class PlayerHandler {
 				$Server->World->setBlockID($coords, 0x00);
 				$broadcastPacket = new BlockChangePacket($x, $y, $z, 0x00, 0x00);
 				$Server->broadcastPacket($broadcastPacket);
+
+				$Server->Logger->logDebug($Client->username . " broke a block at " . $coords->toString());
 				break;
 			case 4:
 				return 0;

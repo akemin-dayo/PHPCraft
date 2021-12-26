@@ -64,9 +64,8 @@ class Client {
 			$this->ticksSinceLastKeepAlive++;
 			if ($this->ticksSinceLastKeepAlive == 600) {
 				// If the client has not sent a KeepAlivePacket (0x00) in the last 30 seconds (600 ticks), assume it has timed out
-
-				// ※ NOTE: Disconnecting upon time out is temporarily disabled for reasons explained in DataHandler HandleKeepAlive().
-				$this->Server->handleDisconnect($this, true, "Keep-alive timeout: 30 seconds (600 ticks)");
+				// And yes, this is a reference to the "Ping timeout: 121 seconds" message sent by many IRCds. ;P
+				$this->Server->handleDisconnect($this, true, "Ping timeout: 30 seconds");
 			}
 		});
 
@@ -76,7 +75,6 @@ class Client {
 	}
 
 	public function __destruct() {
-		// TODO (Karen): Add an option to turn on and off verbose logging, then we can /really/ go full stupid with the verbose debug logs.
 		$this->Server->Logger->logDebug("Destroying Client object for " . $this->username . "…");
     }
 

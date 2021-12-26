@@ -22,8 +22,11 @@ class Logger {
 
 	private $ServerLogger;
 	private $PacketLogger;
+	private $shouldEnableDebugLogging;
 
-	public function __construct() {
+	public function __construct($shouldEnableDebugLogging) {
+		$this->shouldEnableDebugLogging = $shouldEnableDebugLogging;
+
 		if (!file_exists("logs/")) {
 			mkdir("logs/");
 		}
@@ -52,9 +55,11 @@ class Logger {
 	}
 
 	public function logDebug($stringToLog) {
-		$finalStringToLog = $this::COLOUR_CYANBOLD . $this::PREFIX . $this::COLOUR_MAGENTABOLD . $this::DEBUG_PREFIX . $this::COLOUR_RESET . $stringToLog;
-		$finalStringToLog = rtrim($finalStringToLog);
-		$this->ServerLogger->debug($finalStringToLog);
+		if ($this->shouldEnableDebugLogging) {
+			$finalStringToLog = $this::COLOUR_CYANBOLD . $this::PREFIX . $this::COLOUR_MAGENTABOLD . $this::DEBUG_PREFIX . $this::COLOUR_RESET . $stringToLog;
+			$finalStringToLog = rtrim($finalStringToLog);
+			$this->ServerLogger->debug($finalStringToLog);
+		}
 	}
 
 	public function logInfo($stringToLog) {
@@ -76,6 +81,7 @@ class Logger {
 	}
 
 	public function logPacket($stringToLog) {
+		// Packet logging can be enabled independently from the verbose debug logging option.
 		$finalStringToLog = $this::COLOUR_CYANBOLD . $this::PREFIX . $this::COLOUR_MAGENTABOLD . $this::DEBUG_PREFIX . $this::COLOUR_RESET . $stringToLog;
 		$finalStringToLog = rtrim($finalStringToLog);
 		$this->PacketLogger->debug($finalStringToLog);
