@@ -130,10 +130,26 @@ class PacketReader {
 	}
 
 	public function writePacket($packet, $client) {
-		// TODO (Karen): Figure out a better way to do this that doesn't cause PHPCraft to go absolutely insane with retrying failed packet writes as fast as it can.
-		// Removing the retry functionality entirely isn't a good solution either, because that would cause clients that momentarily lose connection to miss world/block updates (which is bad for obvious reasons).
+		/*
+			TODO (Karen): Figure out how to implement failed packet retry functionality in a sane way.
+
+			The commented-out failed packet retry functionality below has some major issues with it:
+			・There is no form of throttling whatsoever for the retried packets, so it will actually retry sending packets as fast as it possibly can, severely impacting server performance.
+				・This is most easily noticeable when using the /stime command. Notice how much slower the time moves!
+			・If a client loses connection and times out, any packets that failed to send to the timed-out client will be stuck retrying infinitely EVEN AFTER the client is disconnected by the server!
+				・This effectively prevents the Client object for disconnected clients from being destroyed.
+
+			That being said, removing the retry functionality entirely isn't really a good solution either, because that would cause clients that momentarily lose connection to miss world/block updates (which is bad for obvious reasons).
+				・At least, I think it would. I haven't actually tested to see if this is the case yet, but it makes sense in theory.
+
+			tl;dr: pain pain pain pain pain pain pain pain
+		*/
+		/*
 		if (!($packet->writePacket($client->streamWrapper))) {
 			$client->enqueuePacket($packet);
 		}
+		*/
+
+		$packet->writePacket($client->streamWrapper);
 	}
 }
