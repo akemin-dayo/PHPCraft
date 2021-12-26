@@ -29,7 +29,7 @@ class StreamWrapper {
 		}
 
 		if (is_null($data)) {
-			$this->Server->Logger->logWarning("StreamWrapper somehow received null data! This should never happen.");
+			$this->Server->Logger->logDebug("StreamWrapper somehow received null data!?");
 			return;
 		}
 
@@ -40,6 +40,10 @@ class StreamWrapper {
 	public function read($len) {
 		$s = "";
 		for ($i = 0; $i < $len; $i++) {
+			if (count($this->streamBuffer) == 0) {
+				$this->Server->Logger->logDebug("streamBuffer is empty!");
+				return $s;
+			}
 			$s = $s . hex2bin(array_pop($this->streamBuffer));
 		}
 

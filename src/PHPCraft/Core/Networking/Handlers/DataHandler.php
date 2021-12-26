@@ -13,7 +13,7 @@ class DataHandler {
 		// As a result, this functionality is useful only for DirtMultiVersion and any other unofficial client that was written using the wiki.vg spec as a reference.
 		// HandleGrounded() in PlayerHandler provides this functionality for b1.7.3 clients.
 
-		$Server->Logger->logDebug("Received a keep-alive packet from " . $Client->username . "'s client!");
+		// $Server->Logger->logDebug("Received a keep-alive packet from " . $Client->username . "'s client!");
 		$Client->ticksSinceLastKeepAlive = 0;
 	}
 
