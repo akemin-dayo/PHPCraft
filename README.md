@@ -15,7 +15,7 @@ PHPCraft is a fork of [Andrew Vy](https://github.com/andrewvy)'s [HHVMCraft](htt
 
 ## Which Minecraft versions are supported?
 
-PHPCraft currently targets and supports Minecraft Beta b1.7.3 ([Beta/pre-Netty Protocol 14](https://wiki.vg/Protocol_version_numbers#Beta)), but you can connect to it with modern (Netty) Minecraft versions (1.8.9 and 1.7.10) using [DirtMultiVersion](https://github.com/DirtPowered/DirtMultiversion), with support for all newer versions including 1.18.1 and 1.17.1 provided by [ViaVersion](https://github.com/ViaVersion/ViaVersion) (see [below](#screenshots) for screenshots!).
+PHPCraft currently targets and supports Minecraft Beta b1.7.3 ([Beta/pre-Netty Protocol 14](https://wiki.vg/Protocol_version_numbers#Beta)), but you can connect to it with modern (Netty) Minecraft versions (1.8.9 and 1.7.10) using [DirtMultiVersion](https://github.com/DirtPowered/DirtMultiversion), with support for all newer versions including 1.18.1 and 1.17.1 provided by [ViaVersion](https://github.com/ViaVersion/ViaVersion) ([see below](#screenshots) for screenshots!).
 
 I _would_ have targeted and supported a modern Minecraft version if I were writing PHPCraft from scratch today, but since this is based off of an existing project that already had a large amount of work done for b1.7.3 already… supporting a modern version would have pretty much required a full rewrite and would be a _lot_ of work for what is again, just a project I'm doing for fun in my free time.
 
@@ -40,7 +40,7 @@ More screenshots can be found in the [screenshots folder](screenshots/) that inc
 ## How do I run PHPCraft?
 
 ### Prerequisites
-* PHP 8.x (recommended, actively used in development) or PHP 7.4 to 7.2
+* PHP 8.x (recommended, actively used in development) or PHP 7.4 (older versions also work, but are not recommended — [see below](#if-youre-using-php-7) for more information)
 	* `brew install php` on macOS (requires [Homebrew](https://brew.sh/) to be installed)
 	* `sudo apt install php` on Debian-based Linux distributions
 	* [PHP for Windows](https://windows.php.net/download)
@@ -59,6 +59,18 @@ php start.php # ./start.php also works
 ```
 
 You can configure various options in `start.php`, including (but not limited to) both the server port (`25565` by default) and the IP address to bind to (`0.0.0.0` by default)!
+
+### If you're using PHP 7…
+Consider using PHP 8 instead. The only reason why PHPCraft supports PHP 7 because it just so happens to work. I actively develop and test against PHP 8.
+
+That being said, if you _really must_ use PHP 7 for some reason…
+
+* **PHP 7.4:** Run `composer update -W`.
+* **PHP 7.3 (end-of-life):** Run `composer update -W`.
+* **PHP 7.2 (end-of-life):** Run `composer require --no-update --dev phpunit/phpunit ^8` and then `composer update -W`.
+* **PHP 7.1 and 7.0 (end-of-life):** Run `composer require --no-update monolog/monolog ^1`, `composer require --no-update --dev phpunit/phpunit ^6`, and then finally `composer update -W`.
+
+**※ IMPORTANT:** Please be aware that PHP 7 is [no longer actively supported](https://www.php.net/supported-versions.php). PHP 7.4 is only receiving critical security updates (no bug fixes), and PHP 7.3〜7.0 have completely reached end-of-life and are **no longer receiving any security updates whatsoever.**
 
 ---
 
