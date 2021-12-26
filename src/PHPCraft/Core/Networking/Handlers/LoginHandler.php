@@ -60,6 +60,9 @@ class LoginHandler {
 				// Sends a new TimeUpdatePacket containing the current world time on every tick to the client.
 				// This prevents the client time from drifting out of sync with the server (as well as other clients).
 				// (Minecraft clients will increment the world time on the client-side, even if no TimeUpdatePackets are actually sent.)
+
+				// ※ NOTE: After analysing packets sent from a CraftBukkit server, it seems like regular servers only send a TimeUpdatePacket once every second.
+				// That being said… it doesn't seem like there's any adverse effects from sending a TimeUpdatePacket on every tick, so that's what I'll continue doing, I guess.
 				$client->enqueuePacket(new TimeUpdatePacket($server->World->getTime()));
 			});
 

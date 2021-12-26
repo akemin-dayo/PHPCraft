@@ -54,7 +54,7 @@ class Client {
 
 		$this->sendClientBoundKeepAliveTimer = $server->loop->addPeriodicTimer(2, function () {
 			// Send a new KeepAlivePacket every 2 seconds, which should be more than often enough
-			// $this->enqueuePacket(new KeepAlivePacket());
+			$this->enqueuePacket(new KeepAlivePacket());
 		});
 
 		$this->isClientStillAliveTimer = $server->loop->addPeriodicTimer(1 / 20, function () {
@@ -66,7 +66,7 @@ class Client {
 				// If the client has not sent a KeepAlivePacket (0x00) in the last 30 seconds (600 ticks), assume it has timed out
 
 				// ※ NOTE: Disconnecting upon time out is temporarily disabled for reasons explained in DataHandler HandleKeepAlive().
-				// $this->Server->handleDisconnect($this, true, "Keep-alive timeout: 30 seconds (600 ticks)");
+				$this->Server->handleDisconnect($this, true, "Keep-alive timeout: 30 seconds (600 ticks)");
 			}
 		});
 

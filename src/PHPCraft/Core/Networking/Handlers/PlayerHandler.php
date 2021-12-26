@@ -14,7 +14,17 @@ use PHPCraft\Core\Networking\StreamWrapper;
 
 class PlayerHandler {
 
-	public static function HandleGrounded() {
+	public static function HandleGrounded($Packet, $Client, $Server) {
+		// When we receive a 0x0A PlayerGroundedPacket, reset ticksSinceLastKeepAlive to 0 for the client that sent it
+
+		// It seems that the wiki.vg specification is somewhat incorrect and that actual b1.7.3 clients don't actaually send keep-alive packets (0x00) at all.
+		// … At least, I wasn't able to find any when I used Wireshark to dump the packet traffic from one.
+
+		// As a result, this functionality is handled here specifically for b1.7.3 clients.
+
+		// For what it's worth, PHPCraft also handles 0x00 keep-alive packets, but in DataHandler HandleKeepAlive().
+		// DirtMultiVersion and any other unofficial clients written using the wiki.vg spec as a reference /do/ send the 0x00 keep-alive packets, so…
+		$Client->ticksSinceLastKeepAlive = 0;
 	}
 
 	public static function HandlePosition($packet, $client, $server) {

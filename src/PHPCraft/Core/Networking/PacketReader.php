@@ -122,10 +122,6 @@ class PacketReader {
 		$packet = new $construct();
 		$packet->readPacket($client->streamWrapper);
 
-		if ($type == "Packets\\PlayerGroundedPacket") {
-			return;
-		}
-
 		return $packet;
 	}
 
