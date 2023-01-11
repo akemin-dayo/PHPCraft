@@ -15,20 +15,20 @@ PHPCraft is a fork of [Andrew Vy](https://github.com/andrewvy)'s [HHVMCraft](htt
 
 ## Which Minecraft versions are supported?
 
-PHPCraft currently targets and supports Minecraft Beta b1.7.3 ([Beta/pre-Netty Protocol 14](https://wiki.vg/Protocol_version_numbers#Beta)), but you can connect to it with modern (Netty) Minecraft versions (1.8.9 and 1.7.10) using [DirtMultiVersion](https://github.com/DirtPowered/DirtMultiversion), with support for all newer versions including 1.18.1 and 1.17.1 provided by [ViaVersion](https://github.com/ViaVersion/ViaVersion) ([see below](#screenshots) for screenshots!).
+PHPCraft currently targets and supports Minecraft Beta b1.7.3 ([Beta/pre-Netty Protocol 14](https://wiki.vg/Protocol_version_numbers#Beta)), but you can connect to it with modern Minecraft versions using [ViaProxy](https://github.com/RaphiMC/ViaProxy) (recommended) or [DirtMultiVersion](https://github.com/DirtPowered/DirtMultiversion) — [see below](#screenshots) for screenshots!
 
 I _would_ have targeted and supported a modern Minecraft version if I were writing PHPCraft from scratch today, but since this is based off of an existing project that already had a large amount of work done for b1.7.3 already… supporting a modern version would have pretty much required a full rewrite and would be a _lot_ of work for what is again, just a project I'm doing for fun in my free time.
 
 (Maybe if I ever somehow just have _too_ much free time some day, perhaps… ;P)
 
-**※ Regarding Bedrock Edition clients connecting using [Geyser](https://github.com/GeyserMC/Geyser):** Geyser currently does not work correctly with PHPCraft for still-unknown reasons (all the blocks are invisible), despite the fact that Geyser _does_ work just fine with DirtMultiVersion when connected to other servers (which means it's likely an issue in PHPCraft specifically).
+**※ Regarding Bedrock Edition clients connecting using [Geyser](https://github.com/GeyserMC/Geyser):** Geyser may not work correctly with PHPCraft (all the blocks become invisible for some unknown reason). I'm not sure if this is still an issue with recent versions of Geyser, though.
 
 ---
 
 ## Screenshots
 
 ![A screenshot of Minecraft 1.17.1 connected to a PHPCraft server, showing a small house that was built from wood planks, a small pond, a tree, and various rose and dandelion flowers scattered about.](screenshots/Minecraft%201.17.1%20-%2001%20Day.png)
-<p align="center">A Minecraft 1.17.1 client connected to a PHPCraft server using <a href="https://github.com/DirtPowered/DirtMultiversion" target="_blank">DirtMultiVersion</a> (and <a href="https://github.com/ViaVersion/ViaVersion" target="_blank">ViaVersion</a>). A Minecraft Beta b1.7.3 client was also connected to the PHPCraft server at the same time, viewing the same world.<br><br><em>(There are no doors or beds because those blocks do not work correctly yet in PHPCraft.)</em></p>
+<p align="center">A modern Minecraft 1.17.1 client connected to a PHPCraft server. A Minecraft Beta b1.7.3 client was also connected to the PHPCraft server at the same time, viewing the same world.<br><br><em>(There are no doors or beds because those blocks do not work correctly yet in PHPCraft.)</em></p>
 
 ![A screenshot of Minecraft 1.17.1 connected to a PHPCraft server, showing the interior of a small house that was built from wood planks. It is later in the day, and the sunlight is filtering through the glass roof. There are two furnaces, some bookshelves, a crafting table, a music player, a chair (actually an oak stair block), and a single stone slab intended to represent a desk.](screenshots/Minecraft%201.17.1%20-%2006%20Morning%20(Interior).png)
 <p align="center">The same Minecraft 1.17.1 client connected to the same PHPCraft server, but at a later time of day.</p>
